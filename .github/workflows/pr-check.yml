@@ -1,0 +1,94 @@
+name: PR Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-info:
+    name: PR Information
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: PR Info
+        run: |
+          echo "📌 PR Title: ${{ github.event.pull_request.title }}"
+          echo "👤 Author: ${{ github.event.pull_request.user.login }}"
+          echo "🔀 Base Branch: ${{ github.event.pull_request.base.ref }}"
+          echo "🌿 Head Branch: ${{ github.event.pull_request.head.ref }}"
+
+  size-label:
+    name: Add Size Label
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR size
+        id: pr-size
+        run: |
+          additions=$(gh pr view ${{ github.event.pull_request.number }} --json additions --jq '.additions')
+          deletions=$(gh pr view ${{ github.event.pull_request.number }} --json deletions --jq '.deletions')
+          total=$((additions + deletions))
+          
+          if [ $total -lt 10 ]; then
+            echo "size=XS" >> $GITHUB_OUTPUT
+          elif [ $total -lt 100 ]; then
+            echo "size=S" >> $GITHUB_OUTPUT
+          elif [ $total -lt 500 ]; then
+            echo "size=M" >> $GITHUB_OUTPUT
+          elif [ $total -lt 1000 ]; then
+            echo "size=L" >> $GITHUB_OUTPUT
+          else
+            echo "size=XL" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Add size label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const size = '${{ steps.pr-size.outputs.size }}';
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: [`size/${size}`]
+            });
+
+  auto-assign:
+    name: Auto Assign Reviewers
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    
+    steps:
+      - name: Auto assign
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // 自动分配审查者（可根据需要自定义）
+            const reviewers = ['your-team-member']; // 替换为实际的 GitHub 用户名
+            
+            if (reviewers.length > 0) {
+              try {
+                await github.rest.pulls.requestReviewers({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: context.issue.number,
+                  reviewers: reviewers
+                });
+              } catch (error) {
+                console.log('Could not assign reviewers:', error.message);
+              }
+            }
+

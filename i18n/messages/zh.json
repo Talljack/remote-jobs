@@ -1,0 +1,180 @@
+{
+  "common": {
+    "appName": "远程工作",
+    "home": "首页",
+    "jobs": "职位",
+    "stats": "统计",
+    "postJob": "发布职位",
+    "signIn": "登录",
+    "signUp": "注册",
+    "signOut": "退出",
+    "search": "搜索",
+    "filter": "筛选",
+    "clear": "清除",
+    "apply": "应用",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "loading": "加载中...",
+    "noResults": "未找到结果",
+    "error": "错误",
+    "success": "成功"
+  },
+  "nav": {
+    "home": "首页",
+    "jobs": "浏览职位",
+    "stats": "数据统计",
+    "postJob": "发布职位",
+    "console": "控制台",
+    "myJobs": "我的职位",
+    "bookmarks": "收藏夹",
+    "profile": "个人设置"
+  },
+  "home": {
+    "hero": {
+      "title": "寻找理想的远程工作",
+      "subtitle": "聚合全球顶级平台的远程工作机会",
+      "searchPlaceholder": "搜索职位、公司或技能...",
+      "search": "搜索",
+      "announcement": {
+        "label": "最新",
+        "title": "🎉 现已聚合 5+ 个平台职位",
+        "url": "/jobs"
+      }
+    },
+    "stats": {
+      "totalJobs": "活跃职位",
+      "companies": "招聘公司",
+      "newToday": "今日新增"
+    },
+    "features": {
+      "title": "为什么选择远程工作平台",
+      "aggregated": {
+        "title": "多平台聚合",
+        "description": "汇集 V2EX、电鸭、RemoteOK 等平台职位"
+      },
+      "realtime": {
+        "title": "实时更新",
+        "description": "每6小时自动更新最新职位信息"
+      },
+      "smart": {
+        "title": "智能筛选",
+        "description": "按薪资、技能、远程类型等多维度筛选"
+      },
+      "free": {
+        "title": "免费发布",
+        "description": "企业可免费发布远程职位"
+      }
+    }
+  },
+  "jobs": {
+    "title": "远程职位",
+    "filters": {
+      "title": "筛选条件",
+      "jobType": "职位类型",
+      "remoteType": "远程类型",
+      "salary": "薪资范围",
+      "tags": "技能标签",
+      "source": "来源平台",
+      "publishedDate": "发布时间",
+      "location": "地区限制",
+      "today": "今天",
+      "thisWeek": "本周",
+      "thisMonth": "本月",
+      "all": "全部"
+    },
+    "jobTypes": {
+      "FULL_TIME": "全职",
+      "PART_TIME": "兼职",
+      "CONTRACT": "合同工",
+      "INTERNSHIP": "实习"
+    },
+    "remoteTypes": {
+      "FULLY_REMOTE": "完全远程",
+      "HYBRID": "混合办公",
+      "OCCASIONAL": "偶尔远程"
+    },
+    "sources": {
+      "V2EX": "V2EX",
+      "ELEDUCK": "电鸭",
+      "USER_POSTED": "用户发布"
+    },
+    "sort": {
+      "latest": "最新",
+      "salary": "薪资",
+      "popular": "热门"
+    },
+    "card": {
+      "viewDetails": "查看详情",
+      "apply": "立即申请",
+      "bookmark": "收藏",
+      "bookmarked": "已收藏"
+    }
+  },
+  "jobDetail": {
+    "title": "职位详情",
+    "description": "职位描述",
+    "requirements": "职位要求",
+    "howToApply": "申请方式",
+    "companyWebsite": "公司网站",
+    "postedBy": "发布者",
+    "postedOn": "发布于",
+    "views": "浏览",
+    "relatedJobs": "相关职位",
+    "share": "分享"
+  },
+  "postJob": {
+    "title": "发布远程职位",
+    "form": {
+      "jobTitle": "职位名称",
+      "jobTitlePlaceholder": "例如：高级前端开发工程师",
+      "companyName": "公司名称",
+      "companyLogo": "公司Logo",
+      "companyWebsite": "公司网站",
+      "jobType": "职位类型",
+      "salaryRange": "薪资范围（可选）",
+      "salaryMin": "最低薪资",
+      "salaryMax": "最高薪资",
+      "currency": "货币",
+      "remoteType": "远程类型",
+      "location": "地区限制",
+      "locationPlaceholder": "例如：美国、欧洲、不限",
+      "description": "职位描述",
+      "requirements": "职位要求（可选）",
+      "tags": "技能标签",
+      "tagsPlaceholder": "输入后按回车添加...",
+      "applyMethod": "申请方式",
+      "applyMethodPlaceholder": "邮箱或申请链接",
+      "submit": "发布职位",
+      "saveDraft": "保存草稿"
+    },
+    "success": "职位发布成功！",
+    "error": "发布失败，请重试。"
+  },
+  "console": {
+    "myJobs": {
+      "title": "我发布的职位",
+      "status": "状态",
+      "actions": "操作",
+      "noJobs": "您还没有发布任何职位。"
+    },
+    "bookmarks": {
+      "title": "收藏的职位",
+      "noBookmarks": "您还没有收藏任何职位。"
+    },
+    "profile": {
+      "title": "个人设置",
+      "emailNotifications": "邮件通知",
+      "receiveJobAlerts": "接收职位推送"
+    }
+  },
+  "stats": {
+    "title": "职位市场统计",
+    "jobTrends": "职位发布趋势",
+    "topSkills": "热门技能需求",
+    "salaryDistribution": "薪资分布",
+    "sourceDistribution": "来源分布",
+    "last30Days": "最近30天"
+  }
+}

@@ -1,0 +1,125 @@
+# GitHub Labels Configuration
+# Use https://github.com/micnncim/action-label-syncer to sync
+
+# Size labels
+- name: "size/XS"
+  color: "00ff00"
+  description: "Extra Small PR (< 10 lines)"
+
+- name: "size/S"
+  color: "7fff00"
+  description: "Small PR (10-99 lines)"
+
+- name: "size/M"
+  color: "ffff00"
+  description: "Medium PR (100-499 lines)"
+
+- name: "size/L"
+  color: "ff7f00"
+  description: "Large PR (500-999 lines)"
+
+- name: "size/XL"
+  color: "ff0000"
+  description: "Extra Large PR (1000+ lines)"
+
+# Type labels
+- name: "type: feature"
+  color: "0052cc"
+  description: "New feature"
+
+- name: "type: bug"
+  color: "d73a4a"
+  description: "Bug fix"
+
+- name: "type: documentation"
+  color: "0075ca"
+  description: "Documentation update"
+
+- name: "type: refactor"
+  color: "fbca04"
+  description: "Code refactoring"
+
+- name: "type: performance"
+  color: "7057ff"
+  description: "Performance improvement"
+
+- name: "type: test"
+  color: "bfd4f2"
+  description: "Test update"
+
+# Priority labels
+- name: "priority: critical"
+  color: "b60205"
+  description: "Critical priority"
+
+- name: "priority: high"
+  color: "d93f0b"
+  description: "High priority"
+
+- name: "priority: medium"
+  color: "fbca04"
+  description: "Medium priority"
+
+- name: "priority: low"
+  color: "0e8a16"
+  description: "Low priority"
+
+# Status labels
+- name: "status: in progress"
+  color: "1d76db"
+  description: "Work in progress"
+
+- name: "status: needs review"
+  color: "fbca04"
+  description: "Needs review"
+
+- name: "status: blocked"
+  color: "d93f0b"
+  description: "Blocked"
+
+- name: "status: ready to merge"
+  color: "0e8a16"
+  description: "Ready to merge"
+
+# Area labels
+- name: "area: frontend"
+  color: "5319e7"
+  description: "Frontend related"
+
+- name: "area: backend"
+  color: "1d76db"
+  description: "Backend related"
+
+- name: "area: database"
+  color: "0052cc"
+  description: "Database related"
+
+- name: "area: crawler"
+  color: "006b75"
+  description: "Crawler related"
+
+- name: "area: ui/ux"
+  color: "d4c5f9"
+  description: "UI/UX related"
+
+- name: "area: auth"
+  color: "c5def5"
+  description: "Authentication related"
+
+# Other labels
+- name: "good first issue"
+  color: "7057ff"
+  description: "Good for newcomers"
+
+- name: "help wanted"
+  color: "008672"
+  description: "Extra attention needed"
+
+- name: "breaking change"
+  color: "d93f0b"
+  description: "Breaking change"
+
+- name: "dependencies"
+  color: "0366d6"
+  description: "Dependency update"
+
