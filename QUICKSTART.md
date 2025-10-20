@@ -1,5 +1,53 @@
 # 🚀 Quick Start Guide - RemoteJobs Platform
 
+## 🐳 快速启动（使用 Docker）
+
+**最快启动方式 - 推荐！**
+
+```bash
+# 1. 启动 PostgreSQL 容器
+docker run --name remotejobs-postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=remotejobs \
+  -p 5432:5432 \
+  -d postgres:16-alpine
+
+# 2. 安装依赖
+pnpm install
+
+# 3. 初始化数据库
+pnpm db:push
+
+# 4. 启动开发服务器
+pnpm dev
+```
+
+**停止和清理**
+```bash
+# 停止容器
+docker stop remotejobs-postgres
+
+# 删除容器（保留数据）
+docker rm remotejobs-postgres
+
+# 删除容器和数据
+docker rm -v remotejobs-postgres
+```
+
+**数据库管理**
+```bash
+# 连接到数据库
+docker exec -it remotejobs-postgres psql -U postgres -d remotejobs
+
+# 查看表
+\dt
+
+# 退出
+\q
+```
+
+---
+
 ## 📦 项目已完成功能
 
 ### ✅ 核心功能 (已完成 80%)
@@ -51,40 +99,31 @@ pnpm install
 
 ### Step 2: 配置环境变量
 
-创建 `.env.local` 文件：
+`.env.local` 已配置好本地 Docker 数据库：
 
 ```bash
-# Database (必需)
-DATABASE_URL="postgresql://user:password@host:5432/database"
+# Database - Local PostgreSQL (使用 Docker)
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/remotejobs
 
-# Clerk Authentication (必需)
+# Clerk Authentication
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxxxx
 CLERK_SECRET_KEY=sk_test_xxxxx
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 
-# App URL (必需)
+# App URL
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# Cron Secret (可选，用于爬虫)
-CRON_SECRET=your_random_secret_here
-
-# Email (可选)
-RESEND_API_KEY=re_xxxxx
-
-# File Upload (可选)
-BLOB_READ_WRITE_TOKEN=vercel_blob_xxxxx
 ```
 
-### Step 3: 获取必需的服务密钥
+**如果使用其他数据库：**
 
-#### 3.1 设置 PostgreSQL 数据库
+**如果使用其他数据库：**
 
-**选项 A: Supabase (推荐)**
+**选项 A: Docker (推荐 - 已配置)**
+```bash
+# 使用页面顶部的 Docker 命令启动
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/remotejobs
+```
 
-1. 访问 [Supabase](https://supabase.com)
+**选项 B: Supabase**
 2. 创建新项目
 3. 在 Settings → Database → Connection String 获取连接字符串
 4. 复制 `postgres://...` 格式的URL到 `DATABASE_URL`
