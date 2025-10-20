@@ -32,7 +32,7 @@ export default async function RootLayout({
   return (
     <ClerkProvider>
       <html lang={locale || "en"} suppressHydrationWarning>
-        <body className={inter.className}>
+        <body className={`${inter.className} flex min-h-screen flex-col`}>
           <NextIntlClientProvider messages={messages}>
             <ThemeProvider
               attribute="class"
