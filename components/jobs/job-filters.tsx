@@ -11,6 +11,9 @@ import { Label } from "@/components/ui/label";
 
 export function JobFilters() {
   const t = useTranslations("jobs.filters");
+  const tJobTypes = useTranslations("jobs.jobTypes");
+  const tRemoteTypes = useTranslations("jobs.remoteTypes");
+  const tSources = useTranslations("jobs.sources");
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -51,7 +54,7 @@ export function JobFilters() {
                   onCheckedChange={(checked) => updateFilter("type", checked ? type : "")}
                 />
                 <label htmlFor={`type-${type}`} className="cursor-pointer text-sm font-normal">
-                  {t(`../jobTypes.${type}`)}
+                  {tJobTypes(type)}
                 </label>
               </div>
             ))}
@@ -70,7 +73,7 @@ export function JobFilters() {
                   onCheckedChange={(checked) => updateFilter("remoteType", checked ? type : "")}
                 />
                 <label htmlFor={`remote-${type}`} className="cursor-pointer text-sm font-normal">
-                  {t(`../remoteTypes.${type}`)}
+                  {tRemoteTypes(type)}
                 </label>
               </div>
             ))}
@@ -89,7 +92,7 @@ export function JobFilters() {
                   onCheckedChange={(checked) => updateFilter("source", checked ? source : "")}
                 />
                 <label htmlFor={`source-${source}`} className="cursor-pointer text-sm font-normal">
-                  {t(`../sources.${source}`)}
+                  {tSources(source)}
                 </label>
               </div>
             ))}

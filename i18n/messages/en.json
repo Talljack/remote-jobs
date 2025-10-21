@@ -80,8 +80,8 @@
       "publishedDate": "Published",
       "location": "Location",
       "today": "Today",
-      "thisWeek": "This Week",
-      "thisMonth": "This Month",
+      "week": "This Week",
+      "month": "This Month",
       "all": "All"
     },
     "jobTypes": {

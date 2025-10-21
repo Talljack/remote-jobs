@@ -80,8 +80,8 @@
       "publishedDate": "发布时间",
       "location": "地区限制",
       "today": "今天",
-      "thisWeek": "本周",
-      "thisMonth": "本月",
+      "week": "本周",
+      "month": "本月",
       "all": "全部"
     },
     "jobTypes": {
