@@ -4,7 +4,7 @@ export default function HeroBg() {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1920 1080"
       fill="none"
-      className="pointer-events-none absolute top-0 left-0 -z-50 hidden [mask-image:linear-gradient(to_right,white,transparent,transparent,white)] opacity-20 lg:block"
+      className="pointer-events-none absolute left-0 top-0 -z-50 hidden opacity-20 [mask-image:linear-gradient(to_right,white,transparent,transparent,white)] lg:block"
     >
       <g clipPath="url(#clip0_4_5)">
         <rect width="1920" height="1080" />

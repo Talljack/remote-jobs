@@ -73,7 +73,7 @@ export function JobList() {
   if (loading && jobs.length === 0) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="text-primary h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }

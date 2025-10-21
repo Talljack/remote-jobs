@@ -2,6 +2,7 @@
   "name": "remote-jobs",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "author": "Remote Jobs Team",
   "description": "A modern remote job aggregation platform built with Next.js 15",
   "scripts": {

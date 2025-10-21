@@ -26,7 +26,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <div className="mr-4 flex flex-1">
           <Link href="/" className="mr-6 flex items-center space-x-2">
@@ -36,15 +36,15 @@ export function Header() {
             </span>
           </Link>
           <nav className="hidden items-center gap-6 md:flex">
-            <Link href="/" className="hover:text-primary text-sm font-medium transition-colors">
+            <Link href="/" className="text-sm font-medium transition-colors hover:text-primary">
               {t("home")}
             </Link>
-            <Link href="/jobs" className="hover:text-primary text-sm font-medium transition-colors">
+            <Link href="/jobs" className="text-sm font-medium transition-colors hover:text-primary">
               {t("jobs")}
             </Link>
             <Link
               href="/stats"
-              className="hover:text-primary text-sm font-medium transition-colors"
+              className="text-sm font-medium transition-colors hover:text-primary"
             >
               {t("stats")}
             </Link>

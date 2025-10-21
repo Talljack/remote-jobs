@@ -17,7 +17,7 @@ export function Footer() {
                 RemoteJobs
               </span>
             </Link>
-            <p className="text-muted-foreground mt-4 max-w-xs text-sm">
+            <p className="mt-4 max-w-xs text-sm text-muted-foreground">
               Your gateway to the best remote job opportunities worldwide. Find your dream remote
               job today.
             </p>
@@ -26,7 +26,7 @@ export function Footer() {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <Twitter className="h-5 w-5" />
                 <span className="sr-only">Twitter</span>
@@ -35,14 +35,14 @@ export function Footer() {
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <Github className="h-5 w-5" />
                 <span className="sr-only">GitHub</span>
               </a>
               <a
                 href="mailto:hello@remotejobs.com"
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <Mail className="h-5 w-5" />
                 <span className="sr-only">Email</span>
@@ -53,19 +53,19 @@ export function Footer() {
           {/* Product */}
           <div>
             <h3 className="mb-4 font-semibold">Product</h3>
-            <ul className="text-muted-foreground space-y-3 text-sm">
+            <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
-                <Link href="/jobs" className="hover:text-foreground transition-colors">
+                <Link href="/jobs" className="transition-colors hover:text-foreground">
                   Browse Jobs
                 </Link>
               </li>
               <li>
-                <Link href="/stats" className="hover:text-foreground transition-colors">
+                <Link href="/stats" className="transition-colors hover:text-foreground">
                   Statistics
                 </Link>
               </li>
               <li>
-                <Link href="/jobs/create" className="hover:text-foreground transition-colors">
+                <Link href="/jobs/create" className="transition-colors hover:text-foreground">
                   Post a Job
                 </Link>
               </li>
@@ -75,19 +75,19 @@ export function Footer() {
           {/* Resources */}
           <div>
             <h3 className="mb-4 font-semibold">Resources</h3>
-            <ul className="text-muted-foreground space-y-3 text-sm">
+            <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
-                <a href="#" className="hover:text-foreground transition-colors">
+                <a href="#" className="transition-colors hover:text-foreground">
                   Blog
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-foreground transition-colors">
+                <a href="#" className="transition-colors hover:text-foreground">
                   Remote Work Guide
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-foreground transition-colors">
+                <a href="#" className="transition-colors hover:text-foreground">
                   API Docs
                 </a>
               </li>
@@ -97,24 +97,24 @@ export function Footer() {
           {/* Company */}
           <div>
             <h3 className="mb-4 font-semibold">Company</h3>
-            <ul className="text-muted-foreground space-y-3 text-sm">
+            <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
-                <a href="#" className="hover:text-foreground transition-colors">
+                <a href="#" className="transition-colors hover:text-foreground">
                   About Us
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-foreground transition-colors">
+                <a href="#" className="transition-colors hover:text-foreground">
                   Contact
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-foreground transition-colors">
+                <a href="#" className="transition-colors hover:text-foreground">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-foreground transition-colors">
+                <a href="#" className="transition-colors hover:text-foreground">
                   Terms of Service
                 </a>
               </li>
@@ -122,16 +122,16 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="text-muted-foreground mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-sm md:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 text-sm text-muted-foreground md:flex-row">
           <p>© {currentYear} RemoteJobs. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-foreground transition-colors">
+            <a href="#" className="transition-colors hover:text-foreground">
               Privacy
             </a>
-            <a href="#" className="hover:text-foreground transition-colors">
+            <a href="#" className="transition-colors hover:text-foreground">
               Terms
             </a>
-            <a href="#" className="hover:text-foreground transition-colors">
+            <a href="#" className="transition-colors hover:text-foreground">
               Cookies
             </a>
           </div>

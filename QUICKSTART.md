@@ -23,6 +23,7 @@ pnpm dev
 ```
 
 **停止和清理**
+
 ```bash
 # 停止容器
 docker stop remotejobs-postgres
@@ -35,6 +36,7 @@ docker rm -v remotejobs-postgres
 ```
 
 **数据库管理**
+
 ```bash
 # 连接到数据库
 docker exec -it remotejobs-postgres psql -U postgres -d remotejobs
@@ -118,15 +120,13 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 **如果使用其他数据库：**
 
 **选项 A: Docker (推荐 - 已配置)**
+
 ```bash
 # 使用页面顶部的 Docker 命令启动
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/remotejobs
 ```
 
-**选项 B: Supabase**
-2. 创建新项目
-3. 在 Settings → Database → Connection String 获取连接字符串
-4. 复制 `postgres://...` 格式的URL到 `DATABASE_URL`
+**选项 B: Supabase** 2. 创建新项目 3. 在 Settings → Database → Connection String 获取连接字符串 4. 复制 `postgres://...` 格式的URL到 `DATABASE_URL`
 
 **选项 B: Vercel Postgres**
 

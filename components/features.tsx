@@ -44,7 +44,7 @@ export function Features() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group border-border bg-background relative overflow-hidden rounded-2xl border p-8 transition-all duration-300 hover:border-transparent hover:shadow-2xl"
+              className="group relative overflow-hidden rounded-2xl border border-border bg-background p-8 transition-all duration-300 hover:border-transparent hover:shadow-2xl"
             >
               {/* Gradient background on hover */}
               <div
@@ -57,8 +57,8 @@ export function Features() {
                 <div
                   className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${feature.gradient} p-0.5 transition-transform duration-300 group-hover:scale-110`}
                 >
-                  <div className="bg-background flex h-full w-full items-center justify-center rounded-[10px]">
-                    <feature.icon className="text-foreground h-6 w-6" />
+                  <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-background">
+                    <feature.icon className="h-6 w-6 text-foreground" />
                   </div>
                 </div>
 
@@ -66,14 +66,14 @@ export function Features() {
                 <h3 className="mb-3 text-xl font-semibold">{feature.title}</h3>
 
                 {/* Description */}
-                <p className="text-muted-foreground text-sm leading-relaxed">
+                <p className="text-sm leading-relaxed text-muted-foreground">
                   {feature.description}
                 </p>
               </div>
 
               {/* Decorative corner */}
               <div
-                className={`absolute -top-4 -right-4 h-24 w-24 rounded-full bg-gradient-to-br ${feature.gradient} opacity-10 blur-2xl transition-opacity duration-300 group-hover:opacity-20`}
+                className={`absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br ${feature.gradient} opacity-10 blur-2xl transition-opacity duration-300 group-hover:opacity-20`}
               />
             </div>
           ))}

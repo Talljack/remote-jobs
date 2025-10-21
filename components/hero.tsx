@@ -41,26 +41,26 @@ export function Hero() {
             {/* Announcement Badge */}
             <Link
               href={t("announcement.url")}
-              className="border-border bg-background/50 hover:bg-accent/50 mx-auto mb-6 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm backdrop-blur-sm transition-all hover:shadow-md"
+              className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-sm backdrop-blur-sm transition-all hover:bg-accent/50 hover:shadow-md"
             >
               <Badge variant="default" className="rounded-full px-2 py-0.5 text-xs">
                 {t("announcement.label")}
               </Badge>
-              <span className="text-muted-foreground text-sm">{t("announcement.title")}</span>
+              <span className="text-sm text-muted-foreground">{t("announcement.title")}</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
 
             {/* Main Title with Gradient Highlight */}
-            <h1 className="mx-auto mt-4 mb-6 max-w-5xl text-4xl font-bold tracking-tight text-balance sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="mx-auto mb-6 mt-4 max-w-5xl text-balance text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
               {titleParts[0]}
-              <span className="from-primary via-primary bg-gradient-to-r to-blue-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary via-primary to-blue-600 bg-clip-text text-transparent">
                 {highlightWord}
               </span>
               {titleParts[1]}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-muted-foreground mx-auto mb-12 max-w-2xl text-base text-balance sm:text-lg md:text-xl">
+            <p className="mx-auto mb-12 max-w-2xl text-balance text-base text-muted-foreground sm:text-lg md:text-xl">
               {t("subtitle")}
             </p>
 
@@ -87,7 +87,7 @@ export function Hero() {
             <form onSubmit={handleSearch} className="mx-auto mb-16 max-w-2xl">
               <div className="flex flex-col gap-3 sm:flex-row">
                 <div className="relative flex-1">
-                  <Search className="text-muted-foreground absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2" />
+                  <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder={t("searchPlaceholder")}
@@ -104,38 +104,38 @@ export function Hero() {
 
             {/* Stats */}
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8">
-              <div className="group border-border/50 bg-background/50 hover:border-primary/30 relative overflow-hidden rounded-xl border p-6 backdrop-blur-sm transition-all hover:shadow-lg">
+              <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-background/50 p-6 backdrop-blur-sm transition-all hover:border-primary/30 hover:shadow-lg">
                 <div className="flex items-center justify-center gap-4">
-                  <div className="bg-primary/10 rounded-full p-3">
-                    <Sparkles className="text-primary h-6 w-6" />
+                  <div className="rounded-full bg-primary/10 p-3">
+                    <Sparkles className="h-6 w-6 text-primary" />
                   </div>
                   <div className="text-left">
-                    <div className="text-foreground text-3xl font-bold">2,500+</div>
-                    <div className="text-muted-foreground text-sm">{tStats("totalJobs")}</div>
+                    <div className="text-3xl font-bold text-foreground">2,500+</div>
+                    <div className="text-sm text-muted-foreground">{tStats("totalJobs")}</div>
                   </div>
                 </div>
               </div>
 
-              <div className="group border-border/50 bg-background/50 hover:border-primary/30 relative overflow-hidden rounded-xl border p-6 backdrop-blur-sm transition-all hover:shadow-lg">
+              <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-background/50 p-6 backdrop-blur-sm transition-all hover:border-primary/30 hover:shadow-lg">
                 <div className="flex items-center justify-center gap-4">
-                  <div className="bg-primary/10 rounded-full p-3">
-                    <Users className="text-primary h-6 w-6" />
+                  <div className="rounded-full bg-primary/10 p-3">
+                    <Users className="h-6 w-6 text-primary" />
                   </div>
                   <div className="text-left">
-                    <div className="text-foreground text-3xl font-bold">500+</div>
-                    <div className="text-muted-foreground text-sm">{tStats("companies")}</div>
+                    <div className="text-3xl font-bold text-foreground">500+</div>
+                    <div className="text-sm text-muted-foreground">{tStats("companies")}</div>
                   </div>
                 </div>
               </div>
 
-              <div className="group border-border/50 bg-background/50 hover:border-primary/30 relative overflow-hidden rounded-xl border p-6 backdrop-blur-sm transition-all hover:shadow-lg">
+              <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-background/50 p-6 backdrop-blur-sm transition-all hover:border-primary/30 hover:shadow-lg">
                 <div className="flex items-center justify-center gap-4">
-                  <div className="bg-primary/10 rounded-full p-3">
-                    <TrendingUp className="text-primary h-6 w-6" />
+                  <div className="rounded-full bg-primary/10 p-3">
+                    <TrendingUp className="h-6 w-6 text-primary" />
                   </div>
                   <div className="text-left">
-                    <div className="text-foreground text-3xl font-bold">50+</div>
-                    <div className="text-muted-foreground text-sm">{tStats("newToday")}</div>
+                    <div className="text-3xl font-bold text-foreground">50+</div>
+                    <div className="text-sm text-muted-foreground">{tStats("newToday")}</div>
                   </div>
                 </div>
               </div>

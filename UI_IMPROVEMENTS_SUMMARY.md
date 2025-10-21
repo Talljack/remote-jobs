@@ -102,7 +102,7 @@ Error: MISSING_MESSAGE: Could not resolve `home.hero.search` in messages for loc
 
    ```tsx
    <div className="{gradient} bg-gradient-to-br p-0.5">
-     <div className="bg-background rounded-[10px]">
+     <div className="rounded-[10px] bg-background">
        <Icon />
      </div>
    </div>
@@ -127,7 +127,7 @@ Error: MISSING_MESSAGE: Could not resolve `home.hero.search` in messages for loc
 **代码示例：**
 
 ```tsx
-<div className="group border-border bg-background relative overflow-hidden rounded-2xl border p-8 transition-all duration-300 hover:border-transparent hover:shadow-2xl">
+<div className="group relative overflow-hidden rounded-2xl border border-border bg-background p-8 transition-all duration-300 hover:border-transparent hover:shadow-2xl">
   {/* 渐变背景 */}
   <div
     className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5`}
@@ -147,7 +147,7 @@ Error: MISSING_MESSAGE: Could not resolve `home.hero.search` in messages for loc
 
   {/* 装饰性光晕 */}
   <div
-    className={`absolute -top-4 -right-4 h-24 w-24 rounded-full bg-gradient-to-br ${gradient} opacity-10 blur-2xl`}
+    className={`absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br ${gradient} opacity-10 blur-2xl`}
   />
 </div>
 ```
@@ -163,7 +163,7 @@ Error: MISSING_MESSAGE: Could not resolve `home.hero.search` in messages for loc
 ```tsx
 export default function HeroBg() {
   return (
-    <svg className="absolute top-0 left-0 -z-50 hidden opacity-20 lg:block">
+    <svg className="absolute left-0 top-0 -z-50 hidden opacity-20 lg:block">
       {/* 水平网格线 */}
       {Array.from({ length: 22 }).map((_, i) => (
         <line y1={49.5 + i * 50} x2="1920" y2={49.5 + i * 50} />
