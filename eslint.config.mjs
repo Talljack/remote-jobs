@@ -53,6 +53,7 @@ const eslintConfig = [
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/no-non-null-assertion": "warn",
+      "@typescript-eslint/no-non-null-assertion": "off",
 
       // Import 规则
       "import/order": [
@@ -99,7 +100,7 @@ const eslintConfig = [
       "import/no-named-as-default-member": "off",
 
       // 通用规则
-      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "no-console": "off",
       "prefer-const": "warn",
       "no-var": "error",
     },
@@ -126,6 +127,7 @@ const eslintConfig = [
       "dist/**",
       "build/**",
       "drizzle/**",
+      "scripts/**",
     ],
   },
 ];

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import createMiddleware from "next-intl/middleware";
@@ -11,8 +11,13 @@ const intlMiddleware = createMiddleware({
 
 const isProtectedRoute = createRouteMatcher(["/console(.*)", "/jobs/create(.*)", "/jobs/edit(.*)"]);
 
-export default clerkMiddleware(async (auth, req) => {
-  // Apply internationalization
+export default clerkMiddleware(async (auth, req: NextRequest) => {
+  // Skip Clerk for API routes - let them through directly
+  if (req.nextUrl.pathname.startsWith("/api")) {
+    return NextResponse.next();
+  }
+
+  // Apply internationalization for non-API routes
   const intlResponse = intlMiddleware(req);
 
   // Protect routes that require authentication
