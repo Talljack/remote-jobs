@@ -1,0 +1,180 @@
+{
+  "common": {
+    "appName": "RemoteJobs",
+    "home": "Home",
+    "jobs": "Jobs",
+    "stats": "Statistics",
+    "postJob": "Post a Job",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "apply": "Apply",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "noResults": "No results found",
+    "error": "Error",
+    "success": "Success"
+  },
+  "nav": {
+    "home": "Home",
+    "jobs": "Browse Jobs",
+    "stats": "Statistics",
+    "postJob": "Post Job",
+    "console": "Dashboard",
+    "myJobs": "My Jobs",
+    "bookmarks": "Bookmarks",
+    "profile": "Profile"
+  },
+  "home": {
+    "hero": {
+      "title": "Find Your Dream Remote Job",
+      "subtitle": "Aggregated remote work opportunities from top platforms worldwide",
+      "searchPlaceholder": "Search by job title, company, or skill...",
+      "search": "Search",
+      "announcement": {
+        "label": "New",
+        "title": "🎉 Now aggregating from 5+ platforms",
+        "url": "/jobs"
+      }
+    },
+    "stats": {
+      "totalJobs": "Active Jobs",
+      "companies": "Companies",
+      "newToday": "New Today"
+    },
+    "features": {
+      "title": "Why Choose RemoteJobs",
+      "aggregated": {
+        "title": "Multi-Platform Aggregation",
+        "description": "Collect jobs from V2EX, Eleduck, RemoteOK, and more"
+      },
+      "realtime": {
+        "title": "Real-time Updates",
+        "description": "Get the latest job postings updated every 6 hours"
+      },
+      "smart": {
+        "title": "Smart Filtering",
+        "description": "Advanced filters by salary, skills, remote type, and more"
+      },
+      "free": {
+        "title": "Post Jobs Free",
+        "description": "Companies can post remote positions for free"
+      }
+    }
+  },
+  "jobs": {
+    "title": "Remote Jobs",
+    "filters": {
+      "title": "Filters",
+      "jobType": "Job Type",
+      "remoteType": "Remote Type",
+      "salary": "Salary Range",
+      "tags": "Skills",
+      "source": "Source",
+      "publishedDate": "Published",
+      "location": "Location",
+      "today": "Today",
+      "week": "This Week",
+      "month": "This Month",
+      "all": "All"
+    },
+    "jobTypes": {
+      "FULL_TIME": "Full Time",
+      "PART_TIME": "Part Time",
+      "CONTRACT": "Contract",
+      "INTERNSHIP": "Internship"
+    },
+    "remoteTypes": {
+      "FULLY_REMOTE": "Fully Remote",
+      "HYBRID": "Hybrid",
+      "OCCASIONAL": "Occasional Remote"
+    },
+    "sources": {
+      "V2EX": "V2EX",
+      "ELEDUCK": "Eleduck",
+      "USER_POSTED": "User Posted"
+    },
+    "sort": {
+      "latest": "Latest",
+      "salary": "Salary",
+      "popular": "Popular"
+    },
+    "card": {
+      "viewDetails": "View Details",
+      "apply": "Apply Now",
+      "bookmark": "Bookmark",
+      "bookmarked": "Bookmarked"
+    }
+  },
+  "jobDetail": {
+    "title": "Job Details",
+    "description": "Description",
+    "requirements": "Requirements",
+    "howToApply": "How to Apply",
+    "companyWebsite": "Company Website",
+    "postedBy": "Posted by",
+    "postedOn": "Posted on",
+    "views": "views",
+    "relatedJobs": "Related Jobs",
+    "share": "Share"
+  },
+  "postJob": {
+    "title": "Post a Remote Job",
+    "form": {
+      "jobTitle": "Job Title",
+      "jobTitlePlaceholder": "e.g. Senior Frontend Developer",
+      "companyName": "Company Name",
+      "companyLogo": "Company Logo",
+      "companyWebsite": "Company Website",
+      "jobType": "Job Type",
+      "salaryRange": "Salary Range (Optional)",
+      "salaryMin": "Minimum",
+      "salaryMax": "Maximum",
+      "currency": "Currency",
+      "remoteType": "Remote Type",
+      "location": "Location Restrictions",
+      "locationPlaceholder": "e.g. US, Europe, No restriction",
+      "description": "Job Description",
+      "requirements": "Requirements (Optional)",
+      "tags": "Skills & Tags",
+      "tagsPlaceholder": "Type and press enter...",
+      "applyMethod": "Application Method",
+      "applyMethodPlaceholder": "Email or application URL",
+      "submit": "Publish Job",
+      "saveDraft": "Save as Draft"
+    },
+    "success": "Job posted successfully!",
+    "error": "Failed to post job. Please try again."
+  },
+  "console": {
+    "myJobs": {
+      "title": "My Posted Jobs",
+      "status": "Status",
+      "actions": "Actions",
+      "noJobs": "You haven't posted any jobs yet."
+    },
+    "bookmarks": {
+      "title": "Bookmarked Jobs",
+      "noBookmarks": "You haven't bookmarked any jobs yet."
+    },
+    "profile": {
+      "title": "Profile Settings",
+      "emailNotifications": "Email Notifications",
+      "receiveJobAlerts": "Receive job alerts"
+    }
+  },
+  "stats": {
+    "title": "Job Market Statistics",
+    "jobTrends": "Job Posting Trends",
+    "topSkills": "Top Skills in Demand",
+    "salaryDistribution": "Salary Distribution",
+    "sourceDistribution": "Source Distribution",
+    "last30Days": "Last 30 Days"
+  }
+}

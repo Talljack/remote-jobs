@@ -1,0 +1,46 @@
+# <type>(<scope>): <subject>
+# │       │         │
+# │       │         └─> 简短描述（不超过 50 字符，不要句号）
+# │       └─> 可选的范围：auth, api, ui, db, crawler 等
+# └─> 必需的类型：feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+
+# 空一行
+
+# [可选] 详细描述
+# 说明 what 和 why，而不是 how
+
+# 空一行
+
+# [可选] Footer
+# 关联 Issue: Closes #123
+# Breaking Change: BREAKING CHANGE: 描述
+
+# --- 提交类型 ---
+# feat:     新功能
+# fix:      Bug 修复
+# docs:     文档更新
+# style:    代码格式调整（不影响代码功能）
+# refactor: 重构（既不是新功能也不是修复 bug）
+# perf:     性能优化
+# test:     测试相关
+# build:    构建系统或外部依赖
+# ci:       CI 配置
+# chore:    其他修改（如修改 .gitignore）
+# revert:   回退之前的提交
+
+# --- 示例 ---
+# feat(auth): add Clerk authentication
+#
+# Integrate Clerk for user authentication and authorization.
+# Replace NextAuth.js with Clerk SDK.
+#
+# Closes #42
+
+# --- 规则 ---
+# 1. 标题行不超过 100 字符
+# 2. 使用祈使句（"add" 而不是 "added" 或 "adds"）
+# 3. 标题首字母小写
+# 4. 标题末尾不要句号
+# 5. 标题和正文之间空一行
+# 6. 正文每行不超过 72 字符
+
