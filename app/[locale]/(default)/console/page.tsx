@@ -1,22 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
+
+import { Plus, Edit, Trash2, Eye, Loader2, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, Eye, Loader2, ExternalLink } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -25,8 +19,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { formatDate } from "@/lib/utils";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Link } from "@/i18n/routing";
+import { formatDate } from "@/lib/utils";
 
 interface Job {
   id: number;
@@ -115,7 +117,7 @@ export default function ConsolePage() {
   if (isLoading) {
     return (
       <div className="container py-8">
-        <div className="flex items-center justify-center h-64">
+        <div className="flex h-64 items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       </div>
@@ -141,8 +143,8 @@ export default function ConsolePage() {
         </CardHeader>
         <CardContent>
           {jobs.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground mb-4">{t("console.myJobs.noJobs")}</p>
+            <div className="py-12 text-center">
+              <p className="mb-4 text-muted-foreground">{t("console.myJobs.noJobs")}</p>
               <Link href="/jobs/create">
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
@@ -170,7 +172,7 @@ export default function ConsolePage() {
                       <div className="flex flex-col">
                         <span>{job.title}</span>
                         {job.tags && job.tags.length > 0 && (
-                          <div className="flex gap-1 mt-1">
+                          <div className="mt-1 flex gap-1">
                             {job.tags.slice(0, 3).map((tag) => (
                               <Badge key={tag.name} variant="outline" className="text-xs">
                                 {tag.name}

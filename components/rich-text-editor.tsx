@@ -2,28 +2,19 @@
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import {
-  Bold,
-  Italic,
-  List,
-  ListOrdered,
-  Heading2,
-  Quote,
-  Code,
-  Undo,
-  Redo,
-} from "lucide-react";
+import { Bold, Italic, List, ListOrdered, Heading2, Quote, Code, Undo, Redo } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+/* eslint-disable no-unused-vars */
 interface RichTextEditorProps {
-  // eslint-disable-next-line no-unused-vars
   content: string;
   onChange: (content: string) => void;
   placeholder?: string;
   className?: string;
 }
+/* eslint-enable no-unused-vars */
 
 export function RichTextEditor({
   content,
@@ -66,10 +57,7 @@ export function RichTextEditor({
       variant="ghost"
       size="sm"
       onClick={onClick}
-      className={cn(
-        "h-8 w-8 p-0",
-        isActive && "bg-muted"
-      )}
+      className={cn("h-8 w-8 p-0", isActive && "bg-muted")}
       title={label}
     >
       {children}
@@ -77,9 +65,9 @@ export function RichTextEditor({
   );
 
   return (
-    <div className={cn("border rounded-lg", className)}>
+    <div className={cn("rounded-lg border", className)}>
       {/* Toolbar */}
-      <div className="border-b bg-muted/30 p-2 flex flex-wrap gap-1">
+      <div className="flex flex-wrap gap-1 border-b bg-muted/30 p-2">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           isActive={editor.isActive("bold")}
@@ -104,7 +92,7 @@ export function RichTextEditor({
           <Heading2 className="h-4 w-4" />
         </ToolbarButton>
 
-        <div className="w-px h-8 bg-border mx-1" />
+        <div className="mx-1 h-8 w-px bg-border" />
 
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -122,7 +110,7 @@ export function RichTextEditor({
           <ListOrdered className="h-4 w-4" />
         </ToolbarButton>
 
-        <div className="w-px h-8 bg-border mx-1" />
+        <div className="mx-1 h-8 w-px bg-border" />
 
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -140,7 +128,7 @@ export function RichTextEditor({
           <Code className="h-4 w-4" />
         </ToolbarButton>
 
-        <div className="w-px h-8 bg-border mx-1" />
+        <div className="mx-1 h-8 w-px bg-border" />
 
         <ToolbarButton onClick={() => editor.chain().focus().undo().run()} label="Undo">
           <Undo className="h-4 w-4" />

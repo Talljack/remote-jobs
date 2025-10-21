@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 
+import { auth } from "@clerk/nextjs/server";
 import { desc, eq, and, or, sql, like, gte, lte } from "drizzle-orm";
 
 import { db, jobs, jobTags, jobTagRelations } from "@/db";

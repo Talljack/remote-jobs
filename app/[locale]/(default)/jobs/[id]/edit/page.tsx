@@ -1,12 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
+
+import { Loader2, Plus, X, ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { Loader2, Plus, X, ArrowLeft } from "lucide-react";
 
+import { RichTextEditor } from "@/components/rich-text-editor";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -16,9 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { RichTextEditor } from "@/components/rich-text-editor";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/routing";
 
 export default function EditJobPage({ params }: { params: Promise<{ id: string }> }) {
@@ -136,7 +138,7 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
   if (isLoading) {
     return (
       <div className="container max-w-4xl py-8">
-        <div className="flex items-center justify-center h-64">
+        <div className="flex h-64 items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       </div>
@@ -206,7 +208,10 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
                 <Label htmlFor="type">
                   {t("postJob.form.jobType")} <span className="text-destructive">*</span>
                 </Label>
-                <Select value={formData.type} onValueChange={(value) => handleChange("type", value)}>
+                <Select
+                  value={formData.type}
+                  onValueChange={(value) => handleChange("type", value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select job type" />
                   </SelectTrigger>
@@ -326,7 +331,7 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
                 </Button>
               </div>
               {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className="mt-2 flex flex-wrap gap-2">
                   {tags.map((tag) => (
                     <Badge key={tag} variant="secondary" className="gap-1">
                       {tag}
@@ -356,7 +361,10 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
             {/* Status */}
             <div className="space-y-2">
               <Label htmlFor="status">Status</Label>
-              <Select value={formData.status} onValueChange={(value) => handleChange("status", value)}>
+              <Select
+                value={formData.status}
+                onValueChange={(value) => handleChange("status", value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

@@ -1,12 +1,17 @@
 "use client";
 
 import { useState } from "react";
+
 import { useRouter } from "next/navigation";
+
+import { Loader2, Plus, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { Loader2, Plus, X } from "lucide-react";
 
+import { RichTextEditor } from "@/components/rich-text-editor";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -16,9 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { RichTextEditor } from "@/components/rich-text-editor";
-import { Badge } from "@/components/ui/badge";
 
 export default function CreateJobPage() {
   const router = useRouter();
@@ -142,7 +144,10 @@ export default function CreateJobPage() {
                 <Label htmlFor="type">
                   {t("postJob.form.jobType")} <span className="text-destructive">*</span>
                 </Label>
-                <Select value={formData.type} onValueChange={(value) => handleChange("type", value)}>
+                <Select
+                  value={formData.type}
+                  onValueChange={(value) => handleChange("type", value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select job type" />
                   </SelectTrigger>
@@ -262,7 +267,7 @@ export default function CreateJobPage() {
                 </Button>
               </div>
               {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className="mt-2 flex flex-wrap gap-2">
                   {tags.map((tag) => (
                     <Badge key={tag} variant="secondary" className="gap-1">
                       {tag}

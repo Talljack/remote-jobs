@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 
+import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 
 import { db, jobs, jobTags, jobTagRelations } from "@/db";
@@ -78,7 +78,11 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
     }
 
     // Check if job exists and belongs to user
-    const [existingJob] = await db.select().from(jobs).where(eq(jobs.id, parseInt(id))).limit(1);
+    const [existingJob] = await db
+      .select()
+      .from(jobs)
+      .where(eq(jobs.id, parseInt(id)))
+      .limit(1);
 
     if (!existingJob) {
       return NextResponse.json({ success: false, error: "Job not found" }, { status: 404 });
@@ -120,10 +124,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const { userId } = await auth();
     const { id } = await context.params;
@@ -133,7 +134,11 @@ export async function DELETE(
     }
 
     // Check if job exists and belongs to user
-    const [existingJob] = await db.select().from(jobs).where(eq(jobs.id, parseInt(id))).limit(1);
+    const [existingJob] = await db
+      .select()
+      .from(jobs)
+      .where(eq(jobs.id, parseInt(id)))
+      .limit(1);
 
     if (!existingJob) {
       return NextResponse.json({ success: false, error: "Job not found" }, { status: 404 });
