@@ -4,29 +4,37 @@ import { useState } from "react";
 
 import { UserButton } from "@clerk/nextjs";
 import { useAuth } from "@clerk/nextjs";
-import { Menu } from "lucide-react";
+import { Briefcase, LayoutDashboard, Menu, PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { LocaleToggle } from "@/components/locale-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Link } from "@/i18n/routing";
 
 export function Header() {
   const t = useTranslations("nav");
   const { isSignedIn } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-2xl font-bold text-transparent">
+      <div className="container flex h-16 items-center">
+        <div className="mr-4 flex flex-1">
+          <Link href="/" className="mr-6 flex items-center space-x-2">
+            <Briefcase className="h-6 w-6" />
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-xl font-bold text-transparent">
               RemoteJobs
             </span>
           </Link>
-
           <nav className="hidden items-center gap-6 md:flex">
             <Link href="/" className="hover:text-primary text-sm font-medium transition-colors">
               {t("home")}
@@ -42,89 +50,125 @@ export function Header() {
             </Link>
           </nav>
         </div>
-
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
-          <LocaleToggle />
-
-          {isSignedIn ? (
-            <>
-              <Link href="/console" className="hidden md:block">
-                <Button variant="ghost" size="sm">
-                  {t("console")}
-                </Button>
-              </Link>
-              <Link href="/jobs/create" className="hidden md:block">
-                <Button size="sm">{t("postJob")}</Button>
-              </Link>
-              <UserButton afterSignOutUrl="/" />
-            </>
-          ) : (
-            <>
-              <Link href="/sign-in" className="hidden md:block">
-                <Button variant="ghost" size="sm">
-                  Sign In
-                </Button>
-              </Link>
-              <Link href="/sign-up" className="hidden md:block">
-                <Button size="sm">Sign Up</Button>
-              </Link>
-            </>
-          )}
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="border-t md:hidden">
-          <nav className="container flex flex-col gap-4 py-4">
-            <Link href="/" className="text-sm font-medium" onClick={() => setMobileMenuOpen(false)}>
-              {t("home")}
-            </Link>
-            <Link
-              href="/jobs"
-              className="text-sm font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {t("jobs")}
-            </Link>
-            <Link
-              href="/stats"
-              className="text-sm font-medium"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {t("stats")}
-            </Link>
-            {isSignedIn && (
+        <div className="flex flex-1 items-center justify-end space-x-2">
+          <nav className="flex items-center space-x-2">
+            <ThemeToggle />
+            <LocaleToggle />
+            {isSignedIn ? (
               <>
-                <Link
-                  href="/console"
-                  className="text-sm font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t("console")}
+                <Link href="/console" className="hidden md:block">
+                  <Button variant="ghost" size="sm">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    {t("console")}
+                  </Button>
                 </Link>
-                <Link
-                  href="/jobs/create"
-                  className="text-sm font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t("postJob")}
+                <Link href="/jobs/create" className="hidden md:block">
+                  <Button size="sm">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    {t("postJob")}
+                  </Button>
+                </Link>
+                <UserButton afterSignOutUrl="/" />
+              </>
+            ) : (
+              <>
+                <Link href="/sign-in" className="hidden md:block">
+                  <Button variant="ghost" size="sm">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/sign-up" className="hidden md:block">
+                  <Button size="sm">Sign Up</Button>
                 </Link>
               </>
             )}
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+                >
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="pr-0">
+                <SheetHeader>
+                  <SheetTitle>
+                    <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
+                      <Briefcase className="mr-2 h-6 w-6" />
+                      <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text font-bold text-transparent">
+                        RemoteJobs
+                      </span>
+                    </Link>
+                  </SheetTitle>
+                  <SheetDescription>Navigate to different sections</SheetDescription>
+                </SheetHeader>
+                <div className="my-4 h-[calc(100vh-8rem)] overflow-y-auto pb-10 pl-6">
+                  <div className="flex flex-col space-y-3">
+                    <Link
+                      href="/"
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => setOpen(false)}
+                    >
+                      {t("home")}
+                    </Link>
+                    <Link
+                      href="/jobs"
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => setOpen(false)}
+                    >
+                      {t("jobs")}
+                    </Link>
+                    <Link
+                      href="/stats"
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => setOpen(false)}
+                    >
+                      {t("stats")}
+                    </Link>
+                    {isSignedIn ? (
+                      <>
+                        <Link
+                          href="/console"
+                          className="text-muted-foreground hover:text-foreground"
+                          onClick={() => setOpen(false)}
+                        >
+                          {t("console")}
+                        </Link>
+                        <Link
+                          href="/jobs/create"
+                          className="text-muted-foreground hover:text-foreground"
+                          onClick={() => setOpen(false)}
+                        >
+                          {t("postJob")}
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          href="/sign-in"
+                          className="text-muted-foreground hover:text-foreground"
+                          onClick={() => setOpen(false)}
+                        >
+                          Sign In
+                        </Link>
+                        <Link
+                          href="/sign-up"
+                          className="text-muted-foreground hover:text-foreground"
+                          onClick={() => setOpen(false)}
+                        >
+                          Sign Up
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </nav>
         </div>
-      )}
+      </div>
     </header>
   );
 }
