@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@clerk/nextjs/server";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 
 import { db, jobs, jobTags, jobTagRelations } from "@/db";
 
@@ -24,16 +24,16 @@ export async function GET(request: NextRequest) {
     const userJobs = await db
       .select()
       .from(jobs)
-      .where(eq(jobs.userId, userId))
+      .where(eq(jobs.publisherId, userId))
       .orderBy(desc(jobs.createdAt))
       .limit(limit)
       .offset(offset);
 
     // Get total count
     const [{ count }] = await db
-      .select({ count: db.$count() })
+      .select({ count: sql<number>`count(*)` })
       .from(jobs)
-      .where(eq(jobs.userId, userId));
+      .where(eq(jobs.publisherId, userId));
 
     // Fetch tags for each job
     const jobsWithTags = await Promise.all(

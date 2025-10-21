@@ -78,17 +78,13 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
     }
 
     // Check if job exists and belongs to user
-    const [existingJob] = await db
-      .select()
-      .from(jobs)
-      .where(eq(jobs.id, parseInt(id)))
-      .limit(1);
+    const [existingJob] = await db.select().from(jobs).where(eq(jobs.id, id)).limit(1);
 
     if (!existingJob) {
       return NextResponse.json({ success: false, error: "Job not found" }, { status: 404 });
     }
 
-    if (existingJob.userId !== userId) {
+    if (existingJob.publisherId !== userId) {
       return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
     }
 
@@ -111,7 +107,7 @@ export async function PUT(request: NextRequest, context: { params: Promise<{ id:
         status,
         updatedAt: new Date(),
       })
-      .where(eq(jobs.id, parseInt(id)))
+      .where(eq(jobs.id, id))
       .returning();
 
     return NextResponse.json({
@@ -134,22 +130,18 @@ export async function DELETE(request: NextRequest, context: { params: Promise<{ 
     }
 
     // Check if job exists and belongs to user
-    const [existingJob] = await db
-      .select()
-      .from(jobs)
-      .where(eq(jobs.id, parseInt(id)))
-      .limit(1);
+    const [existingJob] = await db.select().from(jobs).where(eq(jobs.id, id)).limit(1);
 
     if (!existingJob) {
       return NextResponse.json({ success: false, error: "Job not found" }, { status: 404 });
     }
 
-    if (existingJob.userId !== userId) {
+    if (existingJob.publisherId !== userId) {
       return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
     }
 
     // Delete job
-    await db.delete(jobs).where(eq(jobs.id, parseInt(id)));
+    await db.delete(jobs).where(eq(jobs.id, id));
 
     return NextResponse.json({
       success: true,

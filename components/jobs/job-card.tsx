@@ -20,8 +20,8 @@ interface JobCardProps {
     location: string | null;
     salaryMin: number | null;
     salaryMax: number | null;
-    salaryCurrency: string;
-    publishedAt: string;
+    salaryCurrency: string | null;
+    publishedAt: string | Date | null;
     source: string;
     tags: Array<{ id: string; name: string; slug: string }>;
   };
@@ -49,14 +49,14 @@ export function JobCard({ job }: JobCardProps) {
             {/* Job Info */}
             <div className="min-w-0 flex-1">
               <Link href={`/jobs/${job.id}`}>
-                <h3 className="hover:text-primary line-clamp-2 text-xl font-semibold transition-colors">
+                <h3 className="line-clamp-2 text-xl font-semibold transition-colors hover:text-primary">
                   {job.title}
                 </h3>
               </Link>
-              <p className="text-muted-foreground mt-1">{job.companyName}</p>
+              <p className="mt-1 text-muted-foreground">{job.companyName}</p>
 
               {/* Meta Info */}
-              <div className="text-muted-foreground mt-3 flex flex-wrap gap-4 text-sm">
+              <div className="mt-3 flex flex-wrap gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <Briefcase className="h-4 w-4" />
                   <span>{t(`remoteTypes.${job.remoteType}`)}</span>
@@ -67,10 +67,12 @@ export function JobCard({ job }: JobCardProps) {
                     <span>{job.location}</span>
                   </div>
                 )}
-                <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  <span>{formatRelativeTime(job.publishedAt)}</span>
-                </div>
+                {job.publishedAt && (
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    <span>{formatRelativeTime(job.publishedAt)}</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -98,8 +100,8 @@ export function JobCard({ job }: JobCardProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Badge variant="outline">{t(`jobTypes.${job.type}`)}</Badge>
-              <span className="text-primary text-sm font-semibold">
-                {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency)}
+              <span className="text-sm font-semibold text-primary">
+                {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency || "USD")}
               </span>
             </div>
             <Link href={`/jobs/${job.id}`}>

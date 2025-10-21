@@ -60,7 +60,7 @@ export const jobs = pgTable(
     views: integer("views").default(0).notNull(),
     bookmarkCount: integer("bookmark_count").default(0).notNull(),
     publisherId: text("publisher_id").references(() => users.id),
-    publishedAt: timestamp("published_at").defaultNow().notNull(),
+    publishedAt: timestamp("published_at"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },

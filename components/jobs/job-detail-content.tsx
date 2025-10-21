@@ -69,10 +69,12 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
                         <span>{job.location}</span>
                       </div>
                     )}
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      <span>{formatRelativeTime(job.publishedAt)}</span>
-                    </div>
+                    {job.publishedAt && (
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        <span>{formatRelativeTime(job.publishedAt)}</span>
+                      </div>
+                    )}
                     <div className="flex items-center gap-1">
                       <Eye className="h-4 w-4" />
                       <span>
@@ -101,7 +103,7 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
                 <Badge variant="outline">{useTranslations("jobs")(`sources.${job.source}`)}</Badge>
               </div>
               <div className="text-lg font-semibold text-primary">
-                {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency)}
+                {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency || "USD")}
               </div>
               <Button size="lg" className="ml-auto" onClick={handleApply}>
                 {t("../jobs.card.apply")}
@@ -171,7 +173,7 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
                   <Button
                     variant="outline"
                     size="lg"
-                    onClick={() => window.open(job.companyWebsite, "_blank")}
+                    onClick={() => job.companyWebsite && window.open(job.companyWebsite, "_blank")}
                   >
                     {t("companyWebsite")}
                   </Button>

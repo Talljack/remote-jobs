@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
     const [newJob] = await db
       .insert(jobs)
       .values({
-        userId,
+        publisherId: userId,
         title,
         companyName,
         companyWebsite,
