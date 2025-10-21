@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 
 import { useTranslations } from "next-intl";
 
+import { Job, JobTag } from "@/db/schema";
+
 import { JobCard } from "./job-card";
+
+type JobWithTags = Job & { tags: JobTag[] };
 
 interface RelatedJobsProps {
   currentJobId: string;
@@ -13,7 +17,7 @@ interface RelatedJobsProps {
 
 export function RelatedJobs({ currentJobId, tags }: RelatedJobsProps) {
   const t = useTranslations("jobDetail");
-  const [relatedJobs, setRelatedJobs] = useState([]);
+  const [relatedJobs, setRelatedJobs] = useState<JobWithTags[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +32,7 @@ export function RelatedJobs({ currentJobId, tags }: RelatedJobsProps) {
 
       if (data.success) {
         // Filter out current job
-        const filtered = data.data.jobs.filter((job: any) => job.id !== currentJobId);
+        const filtered = data.data.jobs.filter((job: JobWithTags) => job.id !== currentJobId);
         setRelatedJobs(filtered.slice(0, 3));
       }
     } catch (error) {
@@ -47,7 +51,7 @@ export function RelatedJobs({ currentJobId, tags }: RelatedJobsProps) {
       <div className="mx-auto max-w-4xl">
         <h2 className="mb-6 text-2xl font-bold">{t("relatedJobs")}</h2>
         <div className="grid gap-4">
-          {relatedJobs.map((job: any) => (
+          {relatedJobs.map((job: JobWithTags) => (
             <JobCard key={job.id} job={job} />
           ))}
         </div>

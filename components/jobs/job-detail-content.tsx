@@ -8,10 +8,11 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Job, JobTag } from "@/db/schema";
 import { formatRelativeTime, formatSalary } from "@/lib/utils";
 
 interface JobDetailContentProps {
-  job: any;
+  job: Job & { tags: JobTag[] };
 }
 
 export function JobDetailContent({ job }: JobDetailContentProps) {
@@ -55,9 +56,9 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
                 )}
                 <div className="flex-1">
                   <h1 className="mb-2 text-3xl font-bold">{job.title}</h1>
-                  <p className="text-muted-foreground mb-4 text-xl">{job.companyName}</p>
+                  <p className="mb-4 text-xl text-muted-foreground">{job.companyName}</p>
 
-                  <div className="text-muted-foreground flex flex-wrap gap-4 text-sm">
+                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Briefcase className="h-4 w-4" />
                       <span>{useTranslations("jobs")(`remoteTypes.${job.remoteType}`)}</span>
@@ -99,7 +100,7 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
                 <Badge>{useTranslations("jobs")(`jobTypes.${job.type}`)}</Badge>
                 <Badge variant="outline">{useTranslations("jobs")(`sources.${job.source}`)}</Badge>
               </div>
-              <div className="text-primary text-lg font-semibold">
+              <div className="text-lg font-semibold text-primary">
                 {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency)}
               </div>
               <Button size="lg" className="ml-auto" onClick={handleApply}>
@@ -114,7 +115,7 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
         <Card>
           <CardContent className="pt-6">
             <div className="flex flex-wrap gap-2">
-              {job.tags.map((tag: any) => (
+              {job.tags.map((tag: JobTag) => (
                 <Badge key={tag.id} variant="secondary" className="text-sm">
                   {tag.name}
                 </Badge>
@@ -177,7 +178,7 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
                 )}
               </div>
               {job.sourceUrl && (
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                   Original post:{" "}
                   <a
                     href={job.sourceUrl}

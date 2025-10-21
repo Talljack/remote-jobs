@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@clerk/nextjs/server";
-import { desc, eq, and, or, sql, like, gte, lte } from "drizzle-orm";
+import { desc, eq, and, or, sql, like, gte, lte, SQL } from "drizzle-orm";
 
 import { db, jobs, jobTags, jobTagRelations } from "@/db";
 import { slugify } from "@/lib/utils";
@@ -23,32 +23,33 @@ export async function GET(request: NextRequest) {
     const sort = searchParams.get("sort") || "latest";
 
     // Build where conditions
-    const conditions = [eq(jobs.status, "PUBLISHED")];
+    const conditions: SQL[] = [eq(jobs.status, "PUBLISHED")];
 
     // Keyword search
     if (keyword) {
-      conditions.push(
-        or(
-          like(jobs.title, `%${keyword}%`),
-          like(jobs.companyName, `%${keyword}%`),
-          like(jobs.description, `%${keyword}%`)
-        )!
+      const keywordCondition = or(
+        like(jobs.title, `%${keyword}%`),
+        like(jobs.companyName, `%${keyword}%`),
+        like(jobs.description, `%${keyword}%`)
       );
+      if (keywordCondition) {
+        conditions.push(keywordCondition);
+      }
     }
 
     // Job type filter
-    if (type) {
-      conditions.push(eq(jobs.type, type as any));
+    if (type && ["FULL_TIME", "PART_TIME", "CONTRACT", "INTERNSHIP"].includes(type)) {
+      conditions.push(eq(jobs.type, type as "FULL_TIME" | "PART_TIME" | "CONTRACT" | "INTERNSHIP"));
     }
 
     // Remote type filter
-    if (remoteType) {
-      conditions.push(eq(jobs.remoteType, remoteType as any));
+    if (remoteType && ["FULLY_REMOTE", "HYBRID", "OCCASIONAL"].includes(remoteType)) {
+      conditions.push(eq(jobs.remoteType, remoteType as "FULLY_REMOTE" | "HYBRID" | "OCCASIONAL"));
     }
 
     // Source filter
-    if (source) {
-      conditions.push(eq(jobs.source, source as any));
+    if (source && ["V2EX", "ELEDUCK", "USER_POSTED"].includes(source)) {
+      conditions.push(eq(jobs.source, source as "V2EX" | "ELEDUCK" | "USER_POSTED"));
     }
 
     // Salary filter

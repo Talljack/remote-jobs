@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
-    console.log("Starting crawl job...");
+    console.warn("Starting crawl job...");
     const results = await runCrawlers();
 
     return NextResponse.json({
@@ -20,12 +20,12 @@ export async function GET(request: NextRequest) {
       message: "Crawl job completed",
       results,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Crawl job failed:", error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "Crawl job failed",
+        error: error instanceof Error ? error.message : "Crawl job failed",
       },
       { status: 500 }
     );

@@ -3,10 +3,12 @@ import { db, crawlLogs } from "@/db";
 import { crawlV2EX } from "./v2ex";
 // import { crawlEleduck } from "./eleduck"; // Will implement next
 
+type CrawlResult = { success: number; failed: number; total: number };
+
 export async function runCrawlers() {
   const results = {
-    v2ex: { success: false, message: "", data: null as any },
-    eleduck: { success: false, message: "", data: null as any },
+    v2ex: { success: false, message: "", data: null as CrawlResult | null },
+    eleduck: { success: false, message: "", data: null as CrawlResult | null },
   };
 
   // Crawl V2EX
@@ -29,7 +31,7 @@ export async function runCrawlers() {
       message: `V2EX: ${v2exResult.success} jobs crawled successfully`,
       data: v2exResult,
     };
-  } catch (error: any) {
+  } catch (error) {
     console.error("V2EX crawler failed:", error);
 
     await db.insert(crawlLogs).values({
@@ -38,12 +40,12 @@ export async function runCrawlers() {
       totalCount: 0,
       successCount: 0,
       failCount: 0,
-      errorMessage: error.message,
+      errorMessage: error instanceof Error ? error.message : "Unknown error",
     });
 
     results.v2ex = {
       success: false,
-      message: `V2EX crawler failed: ${error.message}`,
+      message: `V2EX crawler failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       data: null,
     };
   }
