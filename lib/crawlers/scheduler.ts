@@ -1,7 +1,7 @@
 import { db, crawlLogs } from "@/db";
 
+import { crawlEleduck } from "./eleduck";
 import { crawlV2EX } from "./v2ex";
-// import { crawlEleduck } from "./eleduck"; // Will implement next
 
 type CrawlResult = { success: number; failed: number; total: number };
 
@@ -51,12 +51,43 @@ export async function runCrawlers() {
   }
 
   // TODO: Crawl Eleduck
-  // try {
-  //   const eleduckResult = await crawlEleduck();
-  //   results.eleduck = { success: true, data: eleduckResult };
-  // } catch (error) {
-  //   results.eleduck = { success: false, data: null };
-  // }
+  try {
+    const startTime = Date.now();
+    const eleduckResult = await crawlEleduck();
+    const duration = Date.now() - startTime;
+
+    await db.insert(crawlLogs).values({
+      source: "ELEDUCK",
+      status: eleduckResult.failed === 0 ? "SUCCESS" : "PARTIAL",
+      totalCount: eleduckResult.total,
+      successCount: eleduckResult.success,
+      failCount: eleduckResult.failed,
+      duration,
+    });
+
+    results.eleduck = {
+      success: true,
+      message: `Eleduck: ${eleduckResult.success} jobs crawled successfully`,
+      data: eleduckResult,
+    };
+  } catch (error) {
+    console.error("Eleduck crawler failed:", error);
+
+    await db.insert(crawlLogs).values({
+      source: "ELEDUCK",
+      status: "FAILED",
+      totalCount: 0,
+      successCount: 0,
+      failCount: 0,
+      errorMessage: error instanceof Error ? error.message : "Unknown error",
+    });
+
+    results.eleduck = {
+      success: false,
+      message: `Eleduck crawler failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      data: null,
+    };
+  }
 
   return results;
 }

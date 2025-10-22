@@ -1,0 +1,65 @@
+name: Crawl Remote Jobs
+
+on:
+  # 定时任务：每天运行两次
+  # UTC时间 0:00 和 12:00（北京时间 8:00 和 20:00）
+  schedule:
+    - cron: '0 0 * * *'  # 每天 UTC 0:00 (北京时间 8:00)
+    - cron: '0 12 * * *' # 每天 UTC 12:00 (北京时间 20:00)
+
+  # 允许手动触发
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: '手动触发原因'
+        required: false
+        default: '手动测试爬虫'
+
+jobs:
+  crawl:
+    name: Run Job Crawlers
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run crawlers
+        run: npx tsx scripts/run-crawler.ts
+        env:
+          # 数据库连接（使用GitHub Secrets）
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+          # API密钥
+          V2EX_API_TOKEN: ${{ secrets.V2EX_API_TOKEN }}
+
+          # 其他可选配置
+          NODE_ENV: production
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ 爬虫任务失败！"
+          echo "触发时间: $(date)"
+          echo "工作流: ${{ github.workflow }}"
+
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "✅ 爬虫任务成功！"
+          echo "触发时间: $(date)"
+          echo "工作流: ${{ github.workflow }}"
