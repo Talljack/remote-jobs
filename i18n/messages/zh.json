@@ -98,6 +98,16 @@
     "sources": {
       "V2EX": "V2EX",
       "ELEDUCK": "电鸭",
+      "REMOTEOK": "RemoteOK",
+      "WEWORKREMOTELY": "We Work Remotely",
+      "VUEJOBS": "Vue Jobs",
+      "RUANYF_WEEKLY": "阮一峰周刊",
+      "HIMALAYAS": "Himalayas",
+      "REMOTIVE": "Remotive",
+      "BOSS_ZHIPIN": "Boss直聘",
+      "XIAOHONGSHU": "小红书",
+      "LAGOU": "拉勾",
+      "INDEED": "Indeed",
       "USER_POSTED": "用户发布"
     },
     "sort": {

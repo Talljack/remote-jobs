@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter API Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 0;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #2196F3;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button.secondary {
+            background: #2196F3;
+        }
+        button.secondary:hover {
+            background: #0b7dda;
+        }
+        .result {
+            background: #263238;
+            color: #A5D6A7;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+        .info {
+            color: #2196F3;
+            font-weight: bold;
+        }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Remote Jobs Filter API Test Suite</h1>
+        <p><strong>Open Chrome DevTools (F12) → Network tab</strong> to see API requests and responses.</p>
+
+        <div class="stats" id="stats"></div>
+    </div>
+
+    <div class="container">
+        <h2>Test 1: Get Categories with Job Counts</h2>
+        <div class="test-section">
+            <button onclick="testCategories()">Run Test</button>
+            <div id="categories-result" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Test 2: Single Category Filter</h2>
+        <div class="test-section">
+            <button onclick="testSingleCategory()">Filter by React Developer</button>
+            <div id="single-category-result" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Test 3: Multiple Category Filter (Multi-Select)</h2>
+        <div class="test-section">
+            <p>This tests the multi-select functionality - selecting React Developer AND Sales jobs:</p>
+            <button onclick="testMultipleCategories()">Filter by React + Sales</button>
+            <div id="multi-category-result" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Test 4: Multiple Job Types (Multi-Select)</h2>
+        <div class="test-section">
+            <button onclick="testMultipleTypes()">Filter FULL_TIME + PART_TIME</button>
+            <div id="multi-type-result" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Test 5: Multiple Sources (Multi-Select)</h2>
+        <div class="test-section">
+            <button onclick="testMultipleSources()">Filter REMOTEOK + HIMALAYAS</button>
+            <div id="multi-source-result" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Test 6: Combined Filters</h2>
+        <div class="test-section">
+            <p>Test combining multiple filter types together:</p>
+            <button onclick="testCombinedFilters()">React + FULL_TIME + REMOTEOK</button>
+            <div id="combined-result" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+
+        async function fetchAPI(url) {
+            console.log(`🔍 Fetching: ${url}`);
+            const response = await fetch(url);
+            const data = await response.json();
+            console.log('📦 Response:', data);
+            return data;
+        }
+
+        function displayResult(elementId, data, summary) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.innerHTML = `
+                <div class="success">${summary}</div>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetchAPI(`${API_BASE}/jobs?limit=1`);
+                if (response.success) {
+                    const total = response.data.pagination.total;
+                    document.getElementById('stats').innerHTML = `
+                        <div class="stat-card">
+                            <div class="stat-label">Total Jobs</div>
+                            <div class="stat-value">${total}</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            <div class="stat-label">With Categories</div>
+                            <div class="stat-value">721</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            <div class="stat-label">Coverage</div>
+                            <div class="stat-value">${((721/total)*100).toFixed(1)}%</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+
+        async function testCategories() {
+            const data = await fetchAPI(`${API_BASE}/jobs/categories`);
+            const topCategories = data.data.flatMap(parent =>
+                parent.children.filter(c => c.count > 0).slice(0, 3)
+            ).slice(0, 10);
+            displayResult('categories-result', topCategories,
+                `✅ Found ${data.data.length} parent categories with ${topCategories.length} active child categories`
+            );
+        }
+
+        async function testSingleCategory() {
+            // First get React category ID
+            const categories = await fetchAPI(`${API_BASE}/jobs/categories`);
+            const reactCategory = categories.data
+                .flatMap(p => p.children)
+                .find(c => c.name === 'React Developer');
+
+            if (!reactCategory) {
+                alert('React Developer category not found');
+                return;
+            }
+
+            const data = await fetchAPI(`${API_BASE}/jobs?category=${reactCategory.id}&limit=5`);
+            displayResult('single-category-result',
+                { total: data.data.pagination.total, jobs: data.data.jobs.map(j => ({ title: j.title, company: j.companyName })) },
+                `✅ Found ${data.data.pagination.total} React Developer jobs`
+            );
+        }
+
+        async function testMultipleCategories() {
+            const categories = await fetchAPI(`${API_BASE}/jobs/categories`);
+            const allCategories = categories.data.flatMap(p => p.children);
+            const reactCat = allCategories.find(c => c.name === 'React Developer');
+            const salesCat = allCategories.find(c => c.name === 'Sales');
+
+            if (!reactCat || !salesCat) {
+                alert('Categories not found');
+                return;
+            }
+
+            // Multi-select: append category parameter multiple times
+            const url = `${API_BASE}/jobs?category=${reactCat.id}&category=${salesCat.id}&limit=5`;
+            const data = await fetchAPI(url);
+            displayResult('multi-category-result',
+                {
+                    url,
+                    total: data.data.pagination.total,
+                    reactCount: reactCat.count,
+                    salesCount: salesCat.count,
+                    combined: data.data.pagination.total,
+                    jobs: data.data.jobs.map(j => ({ title: j.title, company: j.companyName }))
+                },
+                `✅ Multi-select working! React (${reactCat.count}) + Sales (${salesCat.count}) = ${data.data.pagination.total} total jobs`
+            );
+        }
+
+        async function testMultipleTypes() {
+            const url = `${API_BASE}/jobs?type=FULL_TIME&type=PART_TIME&limit=5`;
+            const data = await fetchAPI(url);
+            displayResult('multi-type-result',
+                {
+                    url,
+                    total: data.data.pagination.total,
+                    jobs: data.data.jobs.map(j => ({ title: j.title, type: j.type, company: j.companyName }))
+                },
+                `✅ Found ${data.data.pagination.total} jobs (FULL_TIME + PART_TIME)`
+            );
+        }
+
+        async function testMultipleSources() {
+            const url = `${API_BASE}/jobs?source=REMOTEOK&source=HIMALAYAS&limit=5`;
+            const data = await fetchAPI(url);
+            displayResult('multi-source-result',
+                {
+                    url,
+                    total: data.data.pagination.total,
+                    jobs: data.data.jobs.map(j => ({ title: j.title, source: j.source, company: j.companyName }))
+                },
+                `✅ Found ${data.data.pagination.total} jobs from REMOTEOK + HIMALAYAS`
+            );
+        }
+
+        async function testCombinedFilters() {
+            const categories = await fetchAPI(`${API_BASE}/jobs/categories`);
+            const reactCat = categories.data.flatMap(p => p.children).find(c => c.name === 'React Developer');
+
+            if (!reactCat) {
+                alert('React Developer category not found');
+                return;
+            }
+
+            const url = `${API_BASE}/jobs?category=${reactCat.id}&type=FULL_TIME&source=REMOTEOK&limit=5`;
+            const data = await fetchAPI(url);
+            displayResult('combined-result',
+                {
+                    url,
+                    filters: {
+                        category: 'React Developer',
+                        type: 'FULL_TIME',
+                        source: 'REMOTEOK'
+                    },
+                    total: data.data.pagination.total,
+                    jobs: data.data.jobs.map(j => ({
+                        title: j.title,
+                        type: j.type,
+                        source: j.source,
+                        company: j.companyName
+                    }))
+                },
+                `✅ Combined filters working! Found ${data.data.pagination.total} React + FULL_TIME + REMOTEOK jobs`
+            );
+        }
+
+        // Load stats on page load
+        loadStats();
+    </script>
+</body>
+</html>

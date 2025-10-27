@@ -36,18 +36,24 @@ export function JobList() {
     total: 0,
   });
 
-  useEffect(() => {
-    fetchJobs();
-  }, [searchParams]);
-
   const fetchJobs = async (page = 1) => {
     setLoading(true);
     try {
       const params = new URLSearchParams(searchParams.toString());
       params.set("page", page.toString());
 
-      const response = await fetch(`/api/jobs?${params.toString()}`);
+      const url = `/api/jobs?${params.toString()}`;
+      console.log("🔍 Fetching jobs from:", url);
+
+      const response = await fetch(url);
       const data = await response.json();
+
+      console.log("📦 API Response:", {
+        success: data.success,
+        jobsCount: data.data?.jobs?.length,
+        total: data.data?.pagination?.total,
+        pagination: data.data?.pagination,
+      });
 
       if (data.success) {
         if (page === 1) {
@@ -58,11 +64,15 @@ export function JobList() {
         setPagination(data.data.pagination);
       }
     } catch (error) {
-      console.error("Error fetching jobs:", error);
+      console.error("❌ Error fetching jobs:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchJobs(1);
+  }, [searchParams]);
 
   const loadMore = () => {
     if (pagination.page < pagination.totalPages) {
