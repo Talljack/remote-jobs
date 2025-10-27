@@ -82,7 +82,9 @@
       "today": "Today",
       "week": "This Week",
       "month": "This Month",
-      "all": "All"
+      "all": "All",
+      "expandAll": "Expand All",
+      "collapseAll": "Collapse All"
     },
     "jobTypes": {
       "FULL_TIME": "Full Time",

@@ -82,7 +82,9 @@
       "today": "今天",
       "week": "本周",
       "month": "本月",
-      "all": "全部"
+      "all": "全部",
+      "expandAll": "全部展开",
+      "collapseAll": "全部折叠"
     },
     "jobTypes": {
       "FULL_TIME": "全职",

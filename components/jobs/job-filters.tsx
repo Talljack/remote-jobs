@@ -60,7 +60,7 @@ export function JobFilters() {
     return new URLSearchParams(sortedEntries).toString();
   }, [searchParams]);
 
-  const lastFiltersKeyRef = useRef<string>("");
+  const lastFiltersKeyRef = useRef<string | null>(null);
 
   // Debug: Log state changes
   useEffect(() => {
@@ -206,15 +206,25 @@ export function JobFilters() {
     setExpandedCategories(newExpanded);
   };
 
+  const toggleAllCategories = () => {
+    if (expandedCategories.size === categories.length) {
+      // All expanded, collapse all
+      setExpandedCategories(new Set());
+    } else {
+      // Some or none expanded, expand all
+      setExpandedCategories(new Set(categories.map((c) => c.id)));
+    }
+  };
+
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+    <Card className="flex h-full flex-col overflow-hidden">
+      <CardHeader className="flex-shrink-0 flex-row items-center justify-between">
         <CardTitle>{t("title")}</CardTitle>
         <Button variant="ghost" size="sm" onClick={clearFilters}>
           Clear
         </Button>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="flex-1 space-y-6 overflow-y-auto">
         {/* Job Type */}
         <div className="space-y-3">
           <Label className="text-base font-semibold">{t("jobType")}</Label>
@@ -255,7 +265,19 @@ export function JobFilters() {
 
         {/* Category */}
         <div className="space-y-3">
-          <Label className="text-base font-semibold">Category</Label>
+          <div className="flex items-center justify-between gap-2">
+            <Label className="text-base font-semibold">Category</Label>
+            {categories.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleAllCategories}
+                className="h-7 shrink-0 px-3 text-xs font-medium"
+              >
+                {expandedCategories.size === categories.length ? t("collapseAll") : t("expandAll")}
+              </Button>
+            )}
+          </div>
           <div className="space-y-2">
             {categories.map((category) => (
               <div key={category.id}>
