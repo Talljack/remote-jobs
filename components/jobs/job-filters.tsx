@@ -62,6 +62,15 @@ export function JobFilters() {
 
   const lastFiltersKeyRef = useRef<string>("");
 
+  // Debug: Log state changes
+  useEffect(() => {
+    console.log("[JobFilters] availableSources updated:", availableSources);
+  }, [availableSources]);
+
+  useEffect(() => {
+    console.log("[JobFilters] categories updated:", categories);
+  }, [categories]);
+
   // Fetch available sources and categories whenever filters change
   useEffect(() => {
     if (lastFiltersKeyRef.current === filtersKey) {
@@ -106,7 +115,9 @@ export function JobFilters() {
                 mergedSourcesMap.set(source, { source, count: 0 });
               }
             });
-            setAvailableSources(Array.from(mergedSourcesMap.values()));
+            const sources = Array.from(mergedSourcesMap.values());
+            console.log("Setting availableSources:", sources);
+            setAvailableSources(sources);
           }
         }
 
@@ -114,6 +125,7 @@ export function JobFilters() {
           const categoriesJson = await categoriesRes.json();
           if (categoriesJson.success) {
             const fetchedCategories: Category[] = categoriesJson.data;
+            console.log("Setting categories:", fetchedCategories);
             setCategories(fetchedCategories);
 
             const autoExpanded = new Set<string>();
