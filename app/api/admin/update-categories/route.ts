@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { eq, isNull, and } from "drizzle-orm";
 
 import { db, jobs, jobCategories } from "@/db";
@@ -109,9 +110,33 @@ async function inferCategoryFromJob(title: string, description: string): Promise
 /**
  * Update categories for jobs without categoryId
  * POST /api/admin/update-categories
+ *
+ * Requires: Admin authentication
  */
 export async function POST() {
   try {
+    // Verify authentication
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized - Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Verify admin role
+    const client = await clerkClient();
+    const user = await client.users.getUser(userId);
+    const userRole = user.publicMetadata?.role as string | undefined;
+
+    if (userRole !== "ADMIN") {
+      return NextResponse.json(
+        { success: false, error: "Forbidden - Admin access required" },
+        { status: 403 }
+      );
+    }
+
     console.log("🔍 Finding jobs without categoryId...");
 
     // Get jobs without category

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 
 import { db, jobCategories } from "@/db";
@@ -7,9 +8,38 @@ import { db, jobCategories } from "@/db";
 /**
  * Seed job categories
  * GET /api/seed/categories
+ *
+ * Security: Requires admin authentication OR development environment
  */
 export async function GET() {
   try {
+    // Check if in development mode
+    const isDevelopment = process.env.NODE_ENV === "development";
+
+    // If not in development, require admin authentication
+    if (!isDevelopment) {
+      const { userId } = await auth();
+
+      if (!userId) {
+        return NextResponse.json(
+          { success: false, error: "Unauthorized - Authentication required" },
+          { status: 401 }
+        );
+      }
+
+      // Verify admin role
+      const client = await clerkClient();
+      const user = await client.users.getUser(userId);
+      const userRole = user.publicMetadata?.role as string | undefined;
+
+      if (userRole !== "ADMIN") {
+        return NextResponse.json(
+          { success: false, error: "Forbidden - Admin access required" },
+          { status: 403 }
+        );
+      }
+    }
+
     const categories = [
       // Top-level categories
       {
