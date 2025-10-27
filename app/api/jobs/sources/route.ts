@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       .from(jobs);
 
     if (whereCondition) {
-      query = query.where(whereCondition);
+      query = query.where(whereCondition) as typeof query;
     }
 
     const sources = await query.groupBy(jobs.source).orderBy(jobs.source);

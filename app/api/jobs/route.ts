@@ -37,7 +37,6 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Fetch jobs
-    let jobsQuery = db.select().from(jobs);
     const whereCondition =
       conditions.length > 1
         ? and(...conditions)
@@ -45,8 +44,10 @@ export async function GET(request: NextRequest) {
           ? conditions[0]
           : undefined;
 
+    let jobsQuery = db.select().from(jobs);
+
     if (whereCondition) {
-      jobsQuery = jobsQuery.where(whereCondition);
+      jobsQuery = jobsQuery.where(whereCondition) as typeof jobsQuery;
     }
 
     const jobsList = await jobsQuery
@@ -58,7 +59,7 @@ export async function GET(request: NextRequest) {
     let countQuery = db.select({ count: sql<number>`count(*)` }).from(jobs);
 
     if (whereCondition) {
-      countQuery = countQuery.where(whereCondition);
+      countQuery = countQuery.where(whereCondition) as typeof countQuery;
     }
 
     const [{ count }] = await countQuery;

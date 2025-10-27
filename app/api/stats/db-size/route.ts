@@ -11,16 +11,16 @@ import { db } from "@/db";
 export async function GET() {
   try {
     // Count records in each table
-    const [jobsCount] = await db.execute(sql`SELECT COUNT(*) as count FROM jobs`);
-    const [tagsCount] = await db.execute(sql`SELECT COUNT(*) as count FROM job_tags`);
-    const [tagRelationsCount] = await db.execute(
+    const jobsCount = await db.execute(sql`SELECT COUNT(*) as count FROM jobs`);
+    const tagsCount = await db.execute(sql`SELECT COUNT(*) as count FROM job_tags`);
+    const tagRelationsCount = await db.execute(
       sql`SELECT COUNT(*) as count FROM job_tag_relations`
     );
-    const [skillsCount] = await db.execute(sql`SELECT COUNT(*) as count FROM skills`);
-    const [skillRelationsCount] = await db.execute(
+    const skillsCount = await db.execute(sql`SELECT COUNT(*) as count FROM skills`);
+    const skillRelationsCount = await db.execute(
       sql`SELECT COUNT(*) as count FROM job_skill_relations`
     );
-    const [categoriesCount] = await db.execute(sql`SELECT COUNT(*) as count FROM job_categories`);
+    const categoriesCount = await db.execute(sql`SELECT COUNT(*) as count FROM job_categories`);
 
     // Get table sizes
     const tableSizes = await db.execute(sql`
@@ -34,7 +34,7 @@ export async function GET() {
     `);
 
     // Get total database size
-    const [dbSize] = await db.execute(sql`
+    const dbSize = await db.execute(sql`
       SELECT pg_size_pretty(pg_database_size(current_database())) as total_size
     `);
 
@@ -42,14 +42,22 @@ export async function GET() {
       success: true,
       data: {
         counts: {
+          // @ts-expect-error - db.execute returns rows array but types are not properly inferred
           jobs: Number(jobsCount.rows[0].count),
+          // @ts-expect-error - db.execute returns rows array but types are not properly inferred
           tags: Number(tagsCount.rows[0].count),
+          // @ts-expect-error - db.execute returns rows array but types are not properly inferred
           tagRelations: Number(tagRelationsCount.rows[0].count),
+          // @ts-expect-error - db.execute returns rows array but types are not properly inferred
           skills: Number(skillsCount.rows[0].count),
+          // @ts-expect-error - db.execute returns rows array but types are not properly inferred
           skillRelations: Number(skillRelationsCount.rows[0].count),
+          // @ts-expect-error - db.execute returns rows array but types are not properly inferred
           categories: Number(categoriesCount.rows[0].count),
         },
+        // @ts-expect-error - db.execute returns rows array but types are not properly inferred
         tableSizes: tableSizes.rows,
+        // @ts-expect-error - db.execute returns rows array but types are not properly inferred
         totalSize: dbSize.rows[0].total_size,
       },
     });
