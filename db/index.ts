@@ -1,16 +1,18 @@
-import { sql } from "@vercel/postgres";
-import { drizzle } from "drizzle-orm/vercel-postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 
 import * as schema from "./schema";
 
-// Initialize Drizzle ORM with Vercel Postgres
-// @vercel/postgres will automatically use DATABASE_URL or POSTGRES_URL
-// Set DATABASE_URL in your environment
-if (process.env.DATABASE_URL) {
-  process.env.POSTGRES_URL = process.env.DATABASE_URL;
-}
+// Create the connection
+const connectionString = process.env.DATABASE_URL!;
 
-export const db = drizzle(sql, { schema });
+// Disable prefetch as it's not supported for "Transaction" pool mode
+export const client = postgres(connectionString, { prepare: false });
 
-// Export schema for use in queries
+// Create the Drizzle instance
+export const db = drizzle(client, { schema });
+
+export type Database = typeof db;
+
+// Export all tables and schemas for easy import
 export * from "./schema";

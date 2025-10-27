@@ -98,6 +98,16 @@
     "sources": {
       "V2EX": "V2EX",
       "ELEDUCK": "Eleduck",
+      "REMOTEOK": "RemoteOK",
+      "WEWORKREMOTELY": "We Work Remotely",
+      "VUEJOBS": "Vue Jobs",
+      "RUANYF_WEEKLY": "Ruanyf Weekly",
+      "HIMALAYAS": "Himalayas",
+      "REMOTIVE": "Remotive",
+      "BOSS_ZHIPIN": "Boss Zhipin",
+      "XIAOHONGSHU": "Xiaohongshu",
+      "LAGOU": "Lagou",
+      "INDEED": "Indeed",
       "USER_POSTED": "User Posted"
     },
     "sort": {

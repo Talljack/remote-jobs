@@ -99,7 +99,12 @@ export function JobCard({ job }: JobCardProps) {
           {/* Bottom Row */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Badge variant="outline">{t(`jobTypes.${job.type}`)}</Badge>
+              <div className="flex items-center gap-2">
+                <Badge variant="outline">{t(`jobTypes.${job.type}`)}</Badge>
+                <Badge variant="secondary" className="text-xs">
+                  {t(`sources.${job.source}`)}
+                </Badge>
+              </div>
               <span className="text-sm font-semibold text-primary">
                 {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency || "USD")}
               </span>

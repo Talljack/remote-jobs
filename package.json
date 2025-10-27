@@ -62,12 +62,14 @@
     "next": "15.5.6",
     "next-intl": "^4.1.0",
     "next-themes": "^0.4.4",
+    "postgres": "^3.4.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "react-markdown": "^9.0.1",
     "recharts": "^2.15.3",
     "resend": "^4.5.1",
+    "rss-parser": "^3.13.0",
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
@@ -107,7 +109,7 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
-      "eslint --fix --max-warnings=0",
+      "eslint --fix --max-warnings=0 --no-warn-ignored",
       "prettier --write"
     ],
     "*.{json,css,md}": [

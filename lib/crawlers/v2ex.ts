@@ -1,11 +1,26 @@
-import axios from "axios";
-import * as cheerio from "cheerio";
+import axios, { AxiosError } from "axios";
 import { eq } from "drizzle-orm";
 
 import { db, jobs, jobTags, jobTagRelations } from "@/db";
 import { extractKeywords, slugify } from "@/lib/utils";
 
-const V2EX_REMOTE_JOBS_URL = "https://www.v2ex.com/go/jobs?tab=remote";
+// V2EX API v2 (requires Personal Access Token)
+const V2EX_API_BASE = "https://www.v2ex.com/api/v2";
+const V2EX_TOKEN = process.env.V2EX_API_TOKEN;
+
+interface V2EXApiTopic {
+  id: number;
+  title: string;
+  content: string;
+  content_rendered: string;
+  url: string;
+  created: number; // Unix timestamp
+  last_modified: number;
+  last_touched: number;
+  replies: number;
+  last_reply_by?: string;
+  syntax: number;
+}
 
 interface V2EXJob {
   title: string;
@@ -25,54 +40,80 @@ export async function crawlV2EX(): Promise<{
   const jobsList: V2EXJob[] = [];
 
   try {
-    // Fetch the page
-    const response = await axios.get(V2EX_REMOTE_JOBS_URL, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-      },
-      timeout: 10000,
-    });
+    if (!V2EX_TOKEN) {
+      console.error("V2EX_API_TOKEN not found in environment variables");
+      throw new Error("V2EX API token is required");
+    }
 
-    const $ = cheerio.load(response.data);
+    console.log("Fetching jobs from V2EX API v2...");
 
-    // Parse job listings
-    $(".cell.item").each((_, element) => {
+    // Fetch multiple pages to get more jobs (API returns ~20 per page)
+    const pagesToFetch = 3; // Fetch first 3 pages (~60 jobs)
+    let allTopics: V2EXApiTopic[] = [];
+
+    for (let page = 1; page <= pagesToFetch; page++) {
       try {
-        const $el = $(element);
-        const $title = $el.find(".item_title a");
-        const title = $title.text().trim();
-        const url = "https://www.v2ex.com" + $title.attr("href");
-        const author = $el.find(".small.fade strong a").text().trim();
-        const timeText = $el.find(".small.fade").text();
+        console.log(`Fetching page ${page}...`);
 
-        // Parse relative time
-        let publishedAt = new Date();
-        if (timeText.includes("分钟前")) {
-          const minutes = parseInt(timeText.match(/(\d+)\s*分钟前/)?.[1] || "0");
-          publishedAt = new Date(Date.now() - minutes * 60 * 1000);
-        } else if (timeText.includes("小时前")) {
-          const hours = parseInt(timeText.match(/(\d+)\s*小时前/)?.[1] || "0");
-          publishedAt = new Date(Date.now() - hours * 60 * 60 * 1000);
-        } else if (timeText.includes("天前")) {
-          const days = parseInt(timeText.match(/(\d+)\s*天前/)?.[1] || "0");
-          publishedAt = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+        const response = await axios.get<{ result: V2EXApiTopic[] }>(
+          `${V2EX_API_BASE}/nodes/jobs/topics?p=${page}`,
+          {
+            headers: {
+              Authorization: `Bearer ${V2EX_TOKEN}`,
+              "User-Agent": "RemoteJobs-Aggregator/1.0",
+              Accept: "application/json",
+            },
+            timeout: 10000,
+          }
+        );
+
+        const topics = response.data.result || [];
+        console.log(`  Page ${page}: ${topics.length} topics`);
+
+        if (topics.length === 0) {
+          console.log("  No more topics, stopping pagination");
+          break;
         }
 
-        if (title && url) {
-          jobsList.push({
-            title,
-            content: "", // Will fetch from detail page if needed
-            url,
-            author,
-            publishedAt,
-          });
+        allTopics = allTopics.concat(topics);
+
+        // Small delay to respect rate limits
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (error: unknown) {
+        const err = error as AxiosError;
+        console.error(`Error fetching page ${page}:`, err.response?.status, err.message);
+        if (err.response?.status === 401) {
+          throw new Error("Invalid V2EX API token");
         }
-      } catch (error) {
-        console.error("Error parsing V2EX job item:", error);
-        failCount++;
+        // Continue with other pages even if one fails
+        break;
       }
-    });
+    }
+
+    console.log(`Total fetched: ${allTopics.length} topics from V2EX`);
+
+    // Filter out job-seeking posts and collect valid jobs
+    for (const topic of allTopics) {
+      const titleLower = topic.title.toLowerCase();
+
+      // Skip job seeking posts (求职)
+      const isJobSeeking = titleLower.includes("求职") || titleLower.includes("[求职]");
+      if (isJobSeeking) {
+        continue;
+      }
+
+      // Include all non-seeking job posts from the jobs node
+      // Remote type will be determined later based on content keywords
+      jobsList.push({
+        title: topic.title,
+        content: topic.content || "",
+        url: topic.url,
+        author: topic.last_reply_by || "V2EX User", // V2 API doesn't include original poster
+        publishedAt: new Date(topic.created * 1000), // Convert Unix timestamp to Date
+      });
+    }
+
+    console.log(`Filtered to ${jobsList.length} job postings (excluding job-seeking)`);
 
     // Process each job
     for (const jobData of jobsList) {
@@ -92,14 +133,29 @@ export async function crawlV2EX(): Promise<{
         // Parse job title to extract company and position
         const { companyName, jobTitle, keywords } = parseV2EXTitle(jobData.title);
 
+        // Determine remote type based on content
+        const remoteKeywords = ["远程", "remote", "居家", "在家", "wfh"];
+        const contentLower = (jobData.content + jobData.title).toLowerCase();
+        const hasRemote = remoteKeywords.some((kw) => contentLower.includes(kw));
+
+        // Determine job type
+        let jobType: "FULL_TIME" | "PART_TIME" | "CONTRACT" | "INTERNSHIP" = "FULL_TIME";
+        if (contentLower.includes("兼职") || contentLower.includes("part-time")) {
+          jobType = "PART_TIME";
+        } else if (contentLower.includes("实习") || contentLower.includes("intern")) {
+          jobType = "INTERNSHIP";
+        } else if (contentLower.includes("合同") || contentLower.includes("contract")) {
+          jobType = "CONTRACT";
+        }
+
         // Create job
         const [newJob] = await db
           .insert(jobs)
           .values({
             title: jobTitle,
             companyName,
-            type: "FULL_TIME", // Default, can be improved with better parsing
-            remoteType: "FULLY_REMOTE",
+            type: jobType,
+            remoteType: hasRemote ? "FULLY_REMOTE" : "OCCASIONAL", // Mark as occasional if not explicitly remote
             description: jobData.content || jobData.title,
             applyMethod: jobData.url,
             source: "V2EX",

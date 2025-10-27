@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
 
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
 import { JobDetailContent } from "@/components/jobs/job-detail-content";
 import { RelatedJobs } from "@/components/jobs/related-jobs";
 import { JobTag } from "@/db/schema";
@@ -40,13 +38,9 @@ export default async function JobDetailPage({
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <main className="flex-1">
-        <JobDetailContent job={job} />
-        <RelatedJobs currentJobId={id} tags={job.tags.map((t: JobTag) => t.id)} />
-      </main>
-      <Footer />
+    <div className="container py-8">
+      <JobDetailContent job={job} />
+      <RelatedJobs currentJobId={id} tags={job.tags.map((t: JobTag) => t.id)} />
     </div>
   );
 }
