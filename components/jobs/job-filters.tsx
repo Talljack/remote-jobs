@@ -38,12 +38,24 @@ export function JobFilters() {
   const tJobTypes = useTranslations("jobs.jobTypes");
   const tRemoteTypes = useTranslations("jobs.remoteTypes");
   const tSources = useTranslations("jobs.sources");
+  const tCategories = useTranslations("jobs.categories");
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const [availableSources, setAvailableSources] = useState<SourceCount[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+
+  // Helper function to get translated category name
+  const getCategoryName = (slug: string, fallbackName: string) => {
+    try {
+      // Replace dots with underscores for translation keys
+      const translationKey = slug.replace(/\./g, "_");
+      return tCategories(translationKey);
+    } catch {
+      return fallbackName;
+    }
+  };
 
   const selectedTypes = useMemo(() => searchParams.getAll("type"), [searchParams]);
   const selectedRemoteTypes = useMemo(() => searchParams.getAll("remoteType"), [searchParams]);
@@ -266,7 +278,7 @@ export function JobFilters() {
         {/* Category */}
         <div className="space-y-3">
           <div className="flex items-center justify-between gap-2">
-            <Label className="text-base font-semibold">Category</Label>
+            <Label className="text-base font-semibold">{t("category")}</Label>
             {categories.length > 0 && (
               <Button
                 variant="outline"
@@ -290,7 +302,7 @@ export function JobFilters() {
                     <span className="text-xs">
                       {expandedCategories.has(category.id) ? "▼" : "▶"}
                     </span>
-                    <span>{category.name}</span>
+                    <span>{getCategoryName(category.slug, category.name)}</span>
                     <span className="text-xs text-muted-foreground">({category.count})</span>
                   </button>
                 </div>
@@ -312,7 +324,7 @@ export function JobFilters() {
                               htmlFor={`category-${child.id}`}
                               className="cursor-pointer text-sm font-normal"
                             >
-                              {child.name}
+                              {getCategoryName(child.slug, child.name)}
                             </label>
                           </div>
                           <span className="text-xs text-muted-foreground">({child.count})</span>

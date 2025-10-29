@@ -1,6 +1,6 @@
 "use client";
 
-import { Bookmark, MapPin, Briefcase, Clock } from "lucide-react";
+import { MapPin, Briefcase, Clock } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { formatRelativeTime, formatSalary } from "@/lib/utils";
+
+import { BookmarkButton } from "./bookmark-button";
 
 interface JobCardProps {
   job: {
@@ -78,9 +80,7 @@ export function JobCard({ job }: JobCardProps) {
           </div>
 
           {/* Bookmark Button */}
-          <Button variant="ghost" size="icon" className="flex-shrink-0">
-            <Bookmark className="h-5 w-5" />
-          </Button>
+          <BookmarkButton jobId={job.id} />
         </div>
       </CardHeader>
 
