@@ -501,11 +501,16 @@ export async function runCrawlers() {
   }
 
   // Cleanup old data after all crawlers have run
-  console.log("\n🧹 Starting data cleanup...");
-  const cleanupResult = await cleanupOldData();
-  console.log(
-    `✅ Cleanup ${cleanupResult.success ? "completed" : "failed"}: ${cleanupResult.message}\n`
-  );
+  try {
+    console.log("\n🧹 Starting data cleanup...");
+    const cleanupResult = await cleanupOldData();
+    console.log(
+      `✅ Cleanup ${cleanupResult.success ? "completed" : "failed"}: ${cleanupResult.message}\n`
+    );
+  } catch (error) {
+    console.error("❌ Cleanup failed:", error);
+    console.log("Continuing despite cleanup failure...\n");
+  }
 
   return results;
 }
