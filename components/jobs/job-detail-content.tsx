@@ -1,8 +1,10 @@
 "use client";
 
-import { Bookmark, MapPin, Briefcase, Clock, Eye, ExternalLink, Share2 } from "lucide-react";
+import { MapPin, Briefcase, Clock, Eye, ExternalLink, Share2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Job, JobTag } from "@/db/schema";
 import { formatRelativeTime, formatSalary } from "@/lib/utils";
+
+import { BookmarkButton } from "./bookmark-button";
 
 interface JobDetailContentProps {
   job: Job & { tags: JobTag[] };
@@ -89,9 +93,7 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
                 <Button variant="outline" size="icon" onClick={handleShare}>
                   <Share2 className="h-5 w-5" />
                 </Button>
-                <Button variant="outline" size="icon">
-                  <Bookmark className="h-5 w-5" />
-                </Button>
+                <BookmarkButton jobId={job.id} variant="outline" />
               </div>
             </div>
           </CardHeader>
@@ -133,7 +135,9 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
           </CardHeader>
           <CardContent>
             <div className="prose prose-slate dark:prose-invert max-w-none">
-              <ReactMarkdown>{job.description}</ReactMarkdown>
+              <ReactMarkdown rehypePlugins={[rehypeRaw, rehypeSanitize]}>
+                {job.description}
+              </ReactMarkdown>
             </div>
           </CardContent>
         </Card>
@@ -146,7 +150,9 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
             </CardHeader>
             <CardContent>
               <div className="prose prose-slate dark:prose-invert max-w-none">
-                <ReactMarkdown>{job.requirements}</ReactMarkdown>
+                <ReactMarkdown rehypePlugins={[rehypeRaw, rehypeSanitize]}>
+                  {job.requirements}
+                </ReactMarkdown>
               </div>
             </CardContent>
           </Card>
@@ -160,13 +166,11 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
           <CardContent>
             <div className="space-y-4">
               <p className="text-muted-foreground">
-                {job.applyMethod.startsWith("http")
-                  ? "Click the button below to apply:"
-                  : "Send your application to:"}
+                {job.applyMethod.startsWith("http") ? t("clickToApply") : t("sendApplicationTo")}
               </p>
               <div className="flex gap-2">
                 <Button size="lg" onClick={handleApply} className="w-full sm:w-auto">
-                  {job.applyMethod.startsWith("http") ? "Apply Now" : "Send Email"}
+                  {job.applyMethod.startsWith("http") ? t("applyNow") : t("sendEmail")}
                   <ExternalLink className="ml-2 h-4 w-4" />
                 </Button>
                 {job.companyWebsite && (
@@ -181,14 +185,14 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
               </div>
               {job.sourceUrl && (
                 <p className="text-sm text-muted-foreground">
-                  Original post:{" "}
+                  {t("originalPost")}{" "}
                   <a
                     href={job.sourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary hover:underline"
                   >
-                    View on {job.source}
+                    {t("viewOn")} {job.source}
                   </a>
                 </p>
               )}

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Translation Test Results</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #2563eb;
+    }
+    h2 {
+      color: #1e40af;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 10px;
+      margin-top: 30px;
+    }
+    .test-section {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .test-item {
+      background: white;
+      padding: 15px;
+      margin: 10px 0;
+      border-left: 4px solid #10b981;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .test-item.pending {
+      border-left-color: #f59e0b;
+    }
+    .test-item.failed {
+      border-left-color: #ef4444;
+    }
+    .status {
+      font-weight: bold;
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+    .status.pass {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .status.pending {
+      background: #fef3c7;
+      color: #78350f;
+    }
+    .status.fail {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    code {
+      background: #e5e7eb;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+    .instructions {
+      background: #dbeafe;
+      border-left: 4px solid #2563eb;
+      padding: 15px;
+      margin: 20px 0;
+    }
+    .screenshot {
+      max-width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Translation & Feature Test Results</h1>
+
+  <div class="instructions">
+    <h3>📋 Manual Testing Instructions</h3>
+    <p>Please follow these steps to manually test all features:</p>
+    <ol>
+      <li>Open <code>http://localhost:3001/jobs</code> in your browser</li>
+      <li>Verify each test item below</li>
+      <li>Take screenshots if needed</li>
+    </ol>
+  </div>
+
+  <h2>1. Category Label Translation</h2>
+  <div class="test-section">
+    <div class="test-item">
+      <strong>Test 1.1: English Category Label</strong>
+      <span class="status pending">MANUAL TEST</span>
+      <ul>
+        <li>Navigate to: <code>http://localhost:3001/en/jobs</code></li>
+        <li>Look at the left sidebar filters</li>
+        <li>Expected: Should see "Category" label (not hardcoded)</li>
+        <li>Location: <code>components/jobs/job-filters.tsx:269</code></li>
+      </ul>
+    </div>
+
+    <div class="test-item">
+      <strong>Test 1.2: Chinese Category Label</strong>
+      <span class="status pending">MANUAL TEST</span>
+      <ul>
+        <li>Navigate to: <code>http://localhost:3001/zh/jobs</code></li>
+        <li>Look at the left sidebar filters</li>
+        <li>Expected: Should see "职位类别" label</li>
+        <li>Translation key: <code>jobs.filters.category</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>2. Bookmark Button Behavior</h2>
+  <div class="test-section">
+    <div class="test-item">
+      <strong>Test 2.1: Bookmark Button Hover (Not Logged In)</strong>
+      <span class="status pending">MANUAL TEST</span>
+      <ul>
+        <li>Navigate to: <code>http://localhost:3001/jobs</code></li>
+        <li>Hover over any bookmark icon on a job card</li>
+        <li>Expected (EN): Tooltip shows "Bookmark this job"</li>
+        <li>Expected (ZH): Tooltip shows "收藏此职位"</li>
+      </ul>
+    </div>
+
+    <div class="test-item">
+      <strong>Test 2.2: Bookmark Button Click (Not Logged In)</strong>
+      <span class="status pending">MANUAL TEST</span>
+      <ul>
+        <li>Click a bookmark button</li>
+        <li>Expected: Should redirect to <code>/sign-in</code> page</li>
+        <li>Location: <code>components/jobs/bookmark-button.tsx:63</code></li>
+      </ul>
+    </div>
+
+    <div class="test-item">
+      <strong>Test 2.3: Add Bookmark (Logged In)</strong>
+      <span class="status pending">MANUAL TEST</span>
+      <ul>
+        <li>Sign in with test account: <code>test@example.com</code></li>
+        <li>Click a bookmark button on any job</li>
+        <li>Expected (EN): Toast shows "Job bookmarked!"</li>
+        <li>Expected (ZH): Toast shows "职位已收藏！"</li>
+        <li>Expected: Icon changes to filled bookmark (BookmarkCheck)</li>
+      </ul>
+    </div>
+
+    <div class="test-item">
+      <strong>Test 2.4: Remove Bookmark (Logged In)</strong>
+      <span class="status pending">MANUAL TEST</span>
+      <ul>
+        <li>Click a bookmarked job's bookmark button</li>
+        <li>Expected (EN): Toast shows "Bookmark removed"</li>
+        <li>Expected (ZH): Toast shows "已取消收藏"</li>
+        <li>Expected: Icon changes back to outline bookmark</li>
+      </ul>
+    </div>
+
+    <div class="test-item">
+      <strong>Test 2.5: Bookmark Button with Text</strong>
+      <span class="status pending">MANUAL TEST</span>
+      <ul>
+        <li>Navigate to a job detail page</li>
+        <li>Check the bookmark button in the header</li>
+        <li>Expected (EN): Button shows "Bookmark" or "Bookmarked"</li>
+        <li>Expected (ZH): Button shows "收藏" or "已收藏"</li>
+        <li>Location: <code>components/jobs/job-detail-content.tsx:96</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>3. Job Detail Page Translations</h2>
+  <div class="test-section">
+    <div class="test-item">
+      <strong>Test 3.1: Application Instructions</strong>
+      <span class="status pending">MANUAL TEST</span>
+      <ul>
+        <li>Navigate to any job detail page</li>
+        <li>Scroll to "How to Apply" section</li>
+        <li>For URL-based applications:
+          <ul>
+            <li>Expected (EN): "Click the button below to apply:"</li>
+            <li>Expected (ZH): "点击下方按钮申请："</li>
+            <li>Expected (EN): Button shows "Apply Now"</li>
+            <li>Expected (ZH): Button shows "立即申请"</li>
+          </ul>
+        </li>
+        <li>For email-based applications:
+          <ul>
+            <li>Expected (EN): "Send your application to:"</li>
+            <li>Expected (ZH): "发送申请至："</li>
+            <li>Expected (EN): Button shows "Send Email"</li>
+            <li>Expected (ZH): Button shows "发送邮件"</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="test-item">
+      <strong>Test 3.2: Original Post Link</strong>
+      <span class="status pending">MANUAL TEST</span>
+      <ul>
+        <li>Look for the original post link at the bottom of "How to Apply"</li>
+        <li>Expected (EN): "Original post: View on [SOURCE]"</li>
+        <li>Expected (ZH): "原文链接： 查看于 [SOURCE]"</li>
+        <li>Location: <code>components/jobs/job-detail-content.tsx:186-193</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>4. Error Handling</h2>
+  <div class="test-section">
+    <div class="test-item">
+      <strong>Test 4.1: Bookmark Error Messages</strong>
+      <span class="status pending">MANUAL TEST</span>
+      <ul>
+        <li>Test network error scenarios (disconnect network while bookmarking)</li>
+        <li>Expected (EN): Toast shows "Something went wrong"</li>
+        <li>Expected (ZH): Toast shows "出错了"</li>
+        <li>Location: <code>components/jobs/bookmark-button.tsx:109</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>5. Build Verification</h2>
+  <div class="test-section">
+    <div class="test-item">
+      <strong>Test 5.1: TypeScript Compilation</strong>
+      <span class="status pass">PASS</span>
+      <ul>
+        <li>Command: <code>pnpm run build</code></li>
+        <li>Result: ✅ Build succeeded with no TypeScript errors</li>
+        <li>Note: Minor ESLint warnings about import order (non-blocking)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>📝 Summary</h2>
+  <div class="test-section">
+    <h3>Changes Made:</h3>
+    <ol>
+      <li><strong>Added translations to English (en.json):</strong>
+        <ul>
+          <li><code>jobs.filters.category</code> - "Category"</li>
+          <li><code>jobs.card.removeBookmark</code> - "Remove bookmark"</li>
+          <li><code>jobs.card.bookmarkThisJob</code> - "Bookmark this job"</li>
+          <li><code>jobs.card.bookmarkRemoved</code> - "Bookmark removed"</li>
+          <li><code>jobs.card.bookmarkAdded</code> - "Job bookmarked!"</li>
+          <li><code>jobs.card.bookmarkError</code> - "Failed to bookmark job"</li>
+          <li><code>jobs.card.somethingWentWrong</code> - "Something went wrong"</li>
+          <li><code>jobDetail.clickToApply</code> - "Click the button below to apply:"</li>
+          <li><code>jobDetail.sendApplicationTo</code> - "Send your application to:"</li>
+          <li><code>jobDetail.applyNow</code> - "Apply Now"</li>
+          <li><code>jobDetail.sendEmail</code> - "Send Email"</li>
+          <li><code>jobDetail.originalPost</code> - "Original post:"</li>
+          <li><code>jobDetail.viewOn</code> - "View on"</li>
+        </ul>
+      </li>
+      <li><strong>Added translations to Chinese (zh.json):</strong>
+        <ul>
+          <li><code>jobs.filters.category</code> - "职位类别"</li>
+          <li>All bookmark-related translations in Chinese</li>
+          <li>All job detail translations in Chinese</li>
+        </ul>
+      </li>
+      <li><strong>Updated Components:</strong>
+        <ul>
+          <li><code>components/jobs/bookmark-button.tsx</code> - Added useTranslations hook and replaced all hardcoded strings</li>
+          <li><code>components/jobs/job-filters.tsx</code> - Replaced hardcoded "Category" with translation</li>
+          <li><code>components/jobs/job-detail-content.tsx</code> - Replaced all hardcoded strings in "How to Apply" section</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h3>Files Modified:</h3>
+    <ul>
+      <li><code>i18n/messages/en.json</code></li>
+      <li><code>i18n/messages/zh.json</code></li>
+      <li><code>components/jobs/bookmark-button.tsx</code></li>
+      <li><code>components/jobs/job-filters.tsx</code></li>
+      <li><code>components/jobs/job-detail-content.tsx</code></li>
+    </ul>
+  </div>
+
+  <div class="instructions">
+    <h3>✅ Next Steps</h3>
+    <ol>
+      <li>Complete all manual tests above</li>
+      <li>Take screenshots for documentation if needed</li>
+      <li>Report any issues found</li>
+      <li>If all tests pass, commit the changes</li>
+    </ol>
+  </div>
+</body>
+</html>

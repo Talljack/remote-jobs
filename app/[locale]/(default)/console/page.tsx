@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { Plus, Edit, Trash2, Eye, Loader2, ExternalLink } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, Loader2, ExternalLink, Bookmark } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -126,6 +126,17 @@ export default function ConsolePage() {
 
   return (
     <div className="container py-8">
+      <div className="mb-6 flex gap-2">
+        <Link href="/console">
+          <Button variant="default">My Jobs</Button>
+        </Link>
+        <Link href="/console/bookmarks">
+          <Button variant="outline">
+            <Bookmark className="mr-2 h-4 w-4" />
+            Bookmarks
+          </Button>
+        </Link>
+      </div>
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">

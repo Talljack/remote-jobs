@@ -38,12 +38,24 @@ export function JobFilters() {
   const tJobTypes = useTranslations("jobs.jobTypes");
   const tRemoteTypes = useTranslations("jobs.remoteTypes");
   const tSources = useTranslations("jobs.sources");
+  const tCategories = useTranslations("jobs.categories");
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const [availableSources, setAvailableSources] = useState<SourceCount[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+
+  // Helper function to get translated category name
+  const getCategoryName = (slug: string, fallbackName: string) => {
+    try {
+      // Replace dots with underscores for translation keys
+      const translationKey = slug.replace(/\./g, "_");
+      return tCategories(translationKey);
+    } catch {
+      return fallbackName;
+    }
+  };
 
   const selectedTypes = useMemo(() => searchParams.getAll("type"), [searchParams]);
   const selectedRemoteTypes = useMemo(() => searchParams.getAll("remoteType"), [searchParams]);
@@ -60,7 +72,16 @@ export function JobFilters() {
     return new URLSearchParams(sortedEntries).toString();
   }, [searchParams]);
 
-  const lastFiltersKeyRef = useRef<string>("");
+  const lastFiltersKeyRef = useRef<string | null>(null);
+
+  // Debug: Log state changes
+  useEffect(() => {
+    console.log("[JobFilters] availableSources updated:", availableSources);
+  }, [availableSources]);
+
+  useEffect(() => {
+    console.log("[JobFilters] categories updated:", categories);
+  }, [categories]);
 
   // Fetch available sources and categories whenever filters change
   useEffect(() => {
@@ -106,7 +127,9 @@ export function JobFilters() {
                 mergedSourcesMap.set(source, { source, count: 0 });
               }
             });
-            setAvailableSources(Array.from(mergedSourcesMap.values()));
+            const sources = Array.from(mergedSourcesMap.values());
+            console.log("Setting availableSources:", sources);
+            setAvailableSources(sources);
           }
         }
 
@@ -114,6 +137,7 @@ export function JobFilters() {
           const categoriesJson = await categoriesRes.json();
           if (categoriesJson.success) {
             const fetchedCategories: Category[] = categoriesJson.data;
+            console.log("Setting categories:", fetchedCategories);
             setCategories(fetchedCategories);
 
             const autoExpanded = new Set<string>();
@@ -194,15 +218,25 @@ export function JobFilters() {
     setExpandedCategories(newExpanded);
   };
 
+  const toggleAllCategories = () => {
+    if (expandedCategories.size === categories.length) {
+      // All expanded, collapse all
+      setExpandedCategories(new Set());
+    } else {
+      // Some or none expanded, expand all
+      setExpandedCategories(new Set(categories.map((c) => c.id)));
+    }
+  };
+
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+    <Card className="flex h-full flex-col overflow-hidden">
+      <CardHeader className="flex-shrink-0 flex-row items-center justify-between">
         <CardTitle>{t("title")}</CardTitle>
         <Button variant="ghost" size="sm" onClick={clearFilters}>
           Clear
         </Button>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="flex-1 space-y-6 overflow-y-auto">
         {/* Job Type */}
         <div className="space-y-3">
           <Label className="text-base font-semibold">{t("jobType")}</Label>
@@ -243,7 +277,19 @@ export function JobFilters() {
 
         {/* Category */}
         <div className="space-y-3">
-          <Label className="text-base font-semibold">Category</Label>
+          <div className="flex items-center justify-between gap-2">
+            <Label className="text-base font-semibold">{t("category")}</Label>
+            {categories.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleAllCategories}
+                className="h-7 shrink-0 px-3 text-xs font-medium"
+              >
+                {expandedCategories.size === categories.length ? t("collapseAll") : t("expandAll")}
+              </Button>
+            )}
+          </div>
           <div className="space-y-2">
             {categories.map((category) => (
               <div key={category.id}>
@@ -256,7 +302,7 @@ export function JobFilters() {
                     <span className="text-xs">
                       {expandedCategories.has(category.id) ? "▼" : "▶"}
                     </span>
-                    <span>{category.name}</span>
+                    <span>{getCategoryName(category.slug, category.name)}</span>
                     <span className="text-xs text-muted-foreground">({category.count})</span>
                   </button>
                 </div>
@@ -278,7 +324,7 @@ export function JobFilters() {
                               htmlFor={`category-${child.id}`}
                               className="cursor-pointer text-sm font-normal"
                             >
-                              {child.name}
+                              {getCategoryName(child.slug, child.name)}
                             </label>
                           </div>
                           <span className="text-xs text-muted-foreground">({child.count})</span>
