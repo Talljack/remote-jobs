@@ -1,6 +1,7 @@
 import { db, crawlLogs } from "@/db";
 
 import { crawlBossZhipin } from "./boss-zhipin";
+import { cleanupOldData } from "./cleaner";
 import { crawlEleduck } from "./eleduck";
 import { crawlHimalayas } from "./himalayas";
 import { crawlIndeed } from "./indeed";
@@ -498,6 +499,13 @@ export async function runCrawlers() {
       data: null,
     };
   }
+
+  // Cleanup old data after all crawlers have run
+  console.log("\n🧹 Starting data cleanup...");
+  const cleanupResult = await cleanupOldData();
+  console.log(
+    `✅ Cleanup ${cleanupResult.success ? "completed" : "failed"}: ${cleanupResult.message}\n`
+  );
 
   return results;
 }

@@ -106,8 +106,11 @@ DATABASE_URL                      # PostgreSQL connection string
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY # Clerk public key
 CLERK_SECRET_KEY                  # Clerk secret key
 
+# Required for Production (Optional for local dev)
+CRON_SECRET                       # Secure cron endpoint (CRITICAL: protects /api/cron/* and /api/cleanup)
+                                  # Generate with: openssl rand -base64 32
+
 # Optional
-CRON_SECRET                       # Secure cron endpoint
 V2EX_API_TOKEN                   # V2EX API access
 RESEND_API_KEY                   # Email service
 ```
