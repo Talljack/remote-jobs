@@ -52,10 +52,8 @@ export async function GET(request: NextRequest) {
       .orderBy(jobCategories.name);
 
     // Build hierarchical structure
-    const categoryTree = parentCategories.map((parent) => ({
-      ...parent,
-      count: categoriesWithCounts.find((c) => c.id === parent.id)?.count || 0,
-      children: categoriesWithCounts
+    const categoryTree = parentCategories.map((parent) => {
+      const children = categoriesWithCounts
         .filter((c) => c.parentId === parent.id)
         .map((child) => ({
           id: child.id,
@@ -63,8 +61,17 @@ export async function GET(request: NextRequest) {
           slug: child.slug,
           icon: child.icon,
           count: child.count,
-        })),
-    }));
+        }));
+
+      // Parent count = sum of all children counts
+      const parentCount = children.reduce((sum, child) => sum + child.count, 0);
+
+      return {
+        ...parent,
+        count: parentCount,
+        children,
+      };
+    });
 
     return NextResponse.json({
       success: true,

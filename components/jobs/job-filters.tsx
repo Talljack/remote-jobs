@@ -229,14 +229,14 @@ export function JobFilters() {
   };
 
   return (
-    <Card className="flex h-full flex-col overflow-hidden">
+    <Card className="flex max-h-[calc(100vh-6rem)] flex-col overflow-hidden">
       <CardHeader className="flex-shrink-0 flex-row items-center justify-between">
         <CardTitle>{t("title")}</CardTitle>
         <Button variant="ghost" size="sm" onClick={clearFilters}>
           Clear
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 space-y-6 overflow-y-auto">
+      <CardContent className="flex-1 space-y-6 overflow-y-auto pb-4">
         {/* Job Type */}
         <div className="space-y-3">
           <Label className="text-base font-semibold">{t("jobType")}</Label>
