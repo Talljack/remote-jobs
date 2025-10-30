@@ -1,25 +1,40 @@
 import { notFound } from "next/navigation";
 
+import { eq } from "drizzle-orm";
+
 import { JobDetailContent } from "@/components/jobs/job-detail-content";
 import { RelatedJobs } from "@/components/jobs/related-jobs";
+import { db, jobs, jobTags, jobTagRelations } from "@/db";
 import { JobTag } from "@/db/schema";
 import { stripHtml } from "@/lib/utils";
 
 async function getJob(id: string) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/jobs/${id}`,
-      {
-        cache: "no-store",
-      }
-    );
+    // Fetch job directly from database
+    const [job] = await db.select().from(jobs).where(eq(jobs.id, id)).limit(1);
 
-    if (!response.ok) {
+    if (!job) {
       return null;
     }
 
-    const data = await response.json();
-    return data.success ? data.data : null;
+    // Increment views
+    await db
+      .update(jobs)
+      .set({ views: job.views + 1 })
+      .where(eq(jobs.id, id));
+
+    // Fetch tags
+    const tags = await db
+      .select({ tag: jobTags })
+      .from(jobTagRelations)
+      .innerJoin(jobTags, eq(jobTagRelations.tagId, jobTags.id))
+      .where(eq(jobTagRelations.jobId, id));
+
+    return {
+      ...job,
+      views: job.views + 1,
+      tags: tags.map((t) => t.tag),
+    };
   } catch (error) {
     console.error("Error fetching job:", error);
     return null;

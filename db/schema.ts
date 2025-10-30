@@ -9,6 +9,7 @@ import {
   uuid,
   primaryKey,
   index,
+  unique,
   PgColumn,
 } from "drizzle-orm/pg-core";
 
@@ -134,6 +135,7 @@ export const jobs = pgTable(
     publisherIdx: index("jobs_publisher_idx").on(table.publisherId),
     categoryIdx: index("jobs_category_idx").on(table.categoryId),
     experienceIdx: index("jobs_experience_idx").on(table.experienceLevel),
+    sourceUrlUnique: unique("jobs_source_url_source_unique").on(table.sourceUrl, table.source),
   })
 );
 
