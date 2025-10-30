@@ -205,6 +205,20 @@ curl http://localhost:3000/api/crawl/remoteok
 pnpm db:push  # or use Vercel's "Redeploy" to trigger migrations
 ```
 
+**Initialize Production Database (First Time)**
+
+For a new production database, execute these SQL files in order:
+
+1. Open your database SQL Editor:
+   - **Vercel Postgres**: Dashboard → Storage → Your DB → Data → Query
+   - **Supabase**: Dashboard → SQL Editor → New query
+
+2. **Step 1**: Run `db/migration.sql` to create tables
+   - Creates all tables, ENUMs, indexes, and foreign keys
+
+3. **Step 2**: Run `db/seed-categories.sql` to populate categories
+   - Inserts 44 job categories (5 parent + 39 child)
+
 ## Important Notes
 
 - **Port Configuration**: Dev server uses port 3000 by default; if occupied, Next.js auto-selects next available port

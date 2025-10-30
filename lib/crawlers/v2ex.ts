@@ -41,8 +41,17 @@ export async function crawlV2EX(): Promise<{
 
   try {
     if (!V2EX_TOKEN) {
-      console.error("V2EX_API_TOKEN not found in environment variables");
-      throw new Error("V2EX API token is required");
+      console.warn("V2EX_API_TOKEN not configured. Skipping V2EX crawl.");
+      console.warn("To enable V2EX crawler:");
+      console.warn("1. Go to https://www.v2ex.com/settings/tokens");
+      console.warn("2. Generate a Personal Access Token");
+      console.warn("3. Set V2EX_API_TOKEN in your environment variables");
+
+      return {
+        success: 0,
+        failed: 0,
+        total: 0,
+      };
     }
 
     console.log("Fetching jobs from V2EX API v2...");
