@@ -2,6 +2,7 @@ import { db, crawlLogs } from "@/db";
 
 import { cleanupOldData } from "./cleaner";
 import { crawlEleduck } from "./eleduck";
+import { crawlFourDayWeek } from "./fourdayweek";
 import { crawlHimalayas } from "./himalayas";
 import { crawlJobicy } from "./jobicy";
 import { crawlRemoteOK } from "./remoteok";
@@ -31,6 +32,7 @@ export async function runCrawlers() {
     remotive: { success: false, message: "", data: null as CrawlResult | null },
     jobicy: { success: false, message: "", data: null as CrawlResult | null },
     workingnomads: { success: false, message: "", data: null as CrawlResult | null },
+    fourdayweek: { success: false, message: "", data: null as CrawlResult | null },
   };
 
   // Crawl V2EX
@@ -341,6 +343,45 @@ export async function runCrawlers() {
     results.workingnomads = {
       success: false,
       message: `Working Nomads crawler failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      data: null,
+    };
+  }
+
+  // Crawl 4 Day Week
+  try {
+    const startTime = Date.now();
+    const fourdayweekResult = await crawlFourDayWeek();
+    const duration = Date.now() - startTime;
+
+    await db.insert(crawlLogs).values({
+      source: "FOURDAYWEEK",
+      status: fourdayweekResult.failed === 0 ? "SUCCESS" : "PARTIAL",
+      totalCount: fourdayweekResult.total,
+      successCount: fourdayweekResult.success,
+      failCount: fourdayweekResult.failed,
+      duration,
+    });
+
+    results.fourdayweek = {
+      success: true,
+      message: `4 Day Week: ${fourdayweekResult.success} jobs crawled successfully`,
+      data: fourdayweekResult,
+    };
+  } catch (error) {
+    console.error("4 Day Week crawler failed:", error);
+
+    await db.insert(crawlLogs).values({
+      source: "FOURDAYWEEK",
+      status: "FAILED",
+      totalCount: 0,
+      successCount: 0,
+      failCount: 0,
+      errorMessage: error instanceof Error ? error.message : "Unknown error",
+    });
+
+    results.fourdayweek = {
+      success: false,
+      message: `4 Day Week crawler failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       data: null,
     };
   }
