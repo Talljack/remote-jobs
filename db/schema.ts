@@ -19,19 +19,27 @@ export const jobTypeEnum = pgEnum("job_type", ["FULL_TIME", "PART_TIME", "CONTRA
 export const remoteTypeEnum = pgEnum("remote_type", ["FULLY_REMOTE", "HYBRID", "OCCASIONAL"]);
 
 export const jobSourceEnum = pgEnum("job_source", [
+  // Active sources
   "V2EX",
   "ELEDUCK",
   "REMOTEOK",
   "WEWORKREMOTELY",
-  "VUEJOBS",
-  "RUANYF_WEEKLY",
   "HIMALAYAS",
   "REMOTIVE",
-  "BOSS_ZHIPIN",
-  "XIAOHONGSHU",
-  "LAGOU",
-  "INDEED",
+  "JOBICY", // International remote jobs API
+  // User posted
   "USER_POSTED",
+  // Deprecated/inactive sources (keep for existing data)
+  "VUEJOBS", // TODO: Fix filtering
+  "RUANYF_WEEKLY", // Not a job board
+  "BOSS_ZHIPIN", // No public API
+  "XIAOHONGSHU", // No public API
+  "LAGOU", // No data
+  "INDEED", // RSS not working
+  "WORKING_NOMADS", // No public RSS feed
+  "JUSTREMOTE", // No public API
+  "DYNAMITE_JOBS", // No public RSS feed
+  "JOBSPRESSO", // No public RSS feed
 ]);
 
 export const jobStatusEnum = pgEnum("job_status", ["DRAFT", "PUBLISHED", "CLOSED"]);
