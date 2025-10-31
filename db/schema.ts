@@ -27,6 +27,7 @@ export const jobSourceEnum = pgEnum("job_source", [
   "HIMALAYAS",
   "REMOTIVE",
   "JOBICY", // International remote jobs API
+  "WORKING_NOMADS", // International remote jobs API
   // User posted
   "USER_POSTED",
   // Deprecated/inactive sources (keep for existing data)
@@ -36,7 +37,6 @@ export const jobSourceEnum = pgEnum("job_source", [
   "XIAOHONGSHU", // No public API
   "LAGOU", // No data
   "INDEED", // RSS not working
-  "WORKING_NOMADS", // No public RSS feed
   "JUSTREMOTE", // No public API
   "DYNAMITE_JOBS", // No public RSS feed
   "JOBSPRESSO", // No public RSS feed

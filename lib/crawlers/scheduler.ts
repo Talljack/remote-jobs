@@ -9,6 +9,7 @@ import { crawlRemotive } from "./remotive";
 import { crawlV2EX } from "./v2ex";
 // import { crawlVueJobs } from "./vuejobs"; // TODO: Fix filtering logic - currently only 5 jobs, all OCCASIONAL
 import { crawlWeWorkRemotely } from "./weworkremotely";
+import { crawlWorkingNomads } from "./workingnomads";
 
 // Removed ineffective crawlers:
 // - crawlBossZhipin: No public API, requires browser automation
@@ -29,6 +30,7 @@ export async function runCrawlers() {
     himalayas: { success: false, message: "", data: null as CrawlResult | null },
     remotive: { success: false, message: "", data: null as CrawlResult | null },
     jobicy: { success: false, message: "", data: null as CrawlResult | null },
+    workingnomads: { success: false, message: "", data: null as CrawlResult | null },
   };
 
   // Crawl V2EX
@@ -300,6 +302,45 @@ export async function runCrawlers() {
     results.jobicy = {
       success: false,
       message: `Jobicy crawler failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      data: null,
+    };
+  }
+
+  // Crawl Working Nomads
+  try {
+    const startTime = Date.now();
+    const workingnomadsResult = await crawlWorkingNomads();
+    const duration = Date.now() - startTime;
+
+    await db.insert(crawlLogs).values({
+      source: "WORKING_NOMADS",
+      status: workingnomadsResult.failed === 0 ? "SUCCESS" : "PARTIAL",
+      totalCount: workingnomadsResult.total,
+      successCount: workingnomadsResult.success,
+      failCount: workingnomadsResult.failed,
+      duration,
+    });
+
+    results.workingnomads = {
+      success: true,
+      message: `Working Nomads: ${workingnomadsResult.success} jobs crawled successfully`,
+      data: workingnomadsResult,
+    };
+  } catch (error) {
+    console.error("Working Nomads crawler failed:", error);
+
+    await db.insert(crawlLogs).values({
+      source: "WORKING_NOMADS",
+      status: "FAILED",
+      totalCount: 0,
+      successCount: 0,
+      failCount: 0,
+      errorMessage: error instanceof Error ? error.message : "Unknown error",
+    });
+
+    results.workingnomads = {
+      success: false,
+      message: `Working Nomads crawler failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       data: null,
     };
   }
