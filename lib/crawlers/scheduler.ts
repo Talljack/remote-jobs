@@ -5,6 +5,7 @@ import { crawlEleduck } from "./eleduck";
 import { crawlFourDayWeek } from "./fourdayweek";
 import { crawlHimalayas } from "./himalayas";
 import { crawlJobicy } from "./jobicy";
+import { crawlRemoteBase } from "./remotebase";
 import { crawlRemoteOK } from "./remoteok";
 import { crawlRemotive } from "./remotive";
 import { crawlV2EX } from "./v2ex";
@@ -33,6 +34,7 @@ export async function runCrawlers() {
     jobicy: { success: false, message: "", data: null as CrawlResult | null },
     workingnomads: { success: false, message: "", data: null as CrawlResult | null },
     fourdayweek: { success: false, message: "", data: null as CrawlResult | null },
+    remotebase: { success: false, message: "", data: null as CrawlResult | null },
   };
 
   // Crawl V2EX
@@ -382,6 +384,45 @@ export async function runCrawlers() {
     results.fourdayweek = {
       success: false,
       message: `4 Day Week crawler failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      data: null,
+    };
+  }
+
+  // Crawl RemoteBase
+  try {
+    const startTime = Date.now();
+    const remotebaseResult = await crawlRemoteBase();
+    const duration = Date.now() - startTime;
+
+    await db.insert(crawlLogs).values({
+      source: "REMOTEBASE",
+      status: remotebaseResult.failed === 0 ? "SUCCESS" : "PARTIAL",
+      totalCount: remotebaseResult.total,
+      successCount: remotebaseResult.success,
+      failCount: remotebaseResult.failed,
+      duration,
+    });
+
+    results.remotebase = {
+      success: true,
+      message: `RemoteBase: ${remotebaseResult.success} jobs crawled successfully`,
+      data: remotebaseResult,
+    };
+  } catch (error) {
+    console.error("RemoteBase crawler failed:", error);
+
+    await db.insert(crawlLogs).values({
+      source: "REMOTEBASE",
+      status: "FAILED",
+      totalCount: 0,
+      successCount: 0,
+      failCount: 0,
+      errorMessage: error instanceof Error ? error.message : "Unknown error",
+    });
+
+    results.remotebase = {
+      success: false,
+      message: `RemoteBase crawler failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       data: null,
     };
   }
