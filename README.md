@@ -97,6 +97,8 @@ CRON_SECRET=your_random_secret_here
 
 ### 4. 初始化数据库
 
+#### 新数据库
+
 ```bash
 # 生成迁移文件
 pnpm db:generate
@@ -104,6 +106,17 @@ pnpm db:generate
 # 执行迁移
 pnpm db:push
 ```
+
+#### 已存在的数据库（需要添加新数据源支持）
+
+如果你的数据库已经存在，需要添加对新爬虫源（Jobicy, Working Nomads, 4 Day Week, RemoteBase）的支持，请执行以下 SQL 迁移：
+
+```bash
+# 连接到你的数据库并执行
+psql $DATABASE_URL -f db/add-new-sources.sql
+```
+
+或者在数据库管理界面（如 Supabase SQL Editor、Vercel Postgres Query）中执行 `db/add-new-sources.sql` 文件的内容。
 
 ### 5. 启动开发服务器
 
