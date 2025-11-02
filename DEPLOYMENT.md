@@ -132,6 +132,8 @@ BLOB_READ_WRITE_TOKEN=vercel_blob_xxxxx
 
 ### Step 5: 执行数据库迁移
 
+#### 新数据库（首次部署）
+
 ```bash
 # 方法 A: 本地执行（推荐）
 # 确保 .env.local 中的 DATABASE_URL 指向生产数据库
@@ -141,6 +143,21 @@ pnpm db:push
 vercel env pull .env.local
 pnpm db:push
 ```
+
+#### 已存在的数据库（更新部署）
+
+如果你的数据库已经存在，需要添加对新爬虫源（Jobicy, Working Nomads, 4 Day Week, RemoteBase）的支持：
+
+```bash
+# 方法 A: 使用 psql 命令行
+psql $DATABASE_URL -f db/add-new-sources.sql
+
+# 方法 B: 通过数据库管理界面
+# - Supabase: Dashboard → SQL Editor → 粘贴 db/add-new-sources.sql 的内容并执行
+# - Vercel Postgres: Dashboard → Data → Query → 粘贴 db/add-new-sources.sql 的内容并执行
+```
+
+**重要**: 此迁移是幂等的（可以安全地多次执行），因为它会检查枚举值是否已存在。
 
 ### Step 6: 部署应用
 
