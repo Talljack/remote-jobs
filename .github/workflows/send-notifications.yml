@@ -1,0 +1,69 @@
+name: Send Job Notifications
+
+on:
+  # 定时任务：每天运行3次
+  # UTC时间 1:00, 6:00, 11:00（北京时间 9:00, 14:00, 19:00）
+  schedule:
+    - cron: '0 1 * * *'   # 每天 UTC 1:00 (北京时间 9:00)
+    - cron: '0 6 * * *'   # 每天 UTC 6:00 (北京时间 14:00)
+    - cron: '0 11 * * *'  # 每天 UTC 11:00 (北京时间 19:00)
+
+  # 允许手动触发
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: '手动触发原因'
+        required: false
+        default: '手动测试通知发送'
+
+jobs:
+  send-notifications:
+    name: Send Email Notifications
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Send notifications
+        run: npx tsx scripts/send-notifications.ts
+        env:
+          # 数据库连接（使用GitHub Secrets）
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+          # 邮件服务 API Key
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+
+          # 应用 URL
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+
+          # 其他配置
+          NODE_ENV: production
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ 通知发送任务失败！"
+          echo "触发时间: $(date)"
+          echo "工作流: ${{ github.workflow }}"
+
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "✅ 通知发送任务成功！"
+          echo "触发时间: $(date)"
+          echo "工作流: ${{ github.workflow }}"

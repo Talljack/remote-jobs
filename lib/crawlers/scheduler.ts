@@ -1,4 +1,7 @@
-import { db, crawlLogs } from "@/db";
+import { gte } from "drizzle-orm";
+
+import { db, crawlLogs, jobs } from "@/db";
+import { matchJobsToSubscriptions } from "@/lib/subscriptions/matcher";
 
 import { cleanupOldData } from "./cleaner";
 import { crawlEleduck } from "./eleduck";
@@ -437,6 +440,31 @@ export async function runCrawlers() {
   } catch (error) {
     console.error("❌ Cleanup failed:", error);
     console.log("Continuing despite cleanup failure...\n");
+  }
+
+  // Match newly crawled jobs with user subscriptions
+  try {
+    console.log("\n🔔 Starting subscription matching...");
+
+    // Get jobs created in the last hour (recently crawled)
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const recentJobs = await db
+      .select({ id: jobs.id })
+      .from(jobs)
+      .where(gte(jobs.createdAt, oneHourAgo));
+
+    if (recentJobs.length > 0) {
+      const jobIds = recentJobs.map((j) => j.id);
+      console.log(`  Found ${jobIds.length} recently created jobs`);
+
+      const notificationsCreated = await matchJobsToSubscriptions(jobIds);
+      console.log(`✅ Created ${notificationsCreated} notifications for matching subscriptions\n`);
+    } else {
+      console.log("  No recent jobs found, skipping subscription matching\n");
+    }
+  } catch (error) {
+    console.error("❌ Subscription matching failed:", error);
+    console.log("Continuing despite matching failure...\n");
   }
 
   return results;

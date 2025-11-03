@@ -29,7 +29,9 @@
     "console": "控制台",
     "myJobs": "我的职位",
     "bookmarks": "收藏夹",
-    "profile": "个人设置"
+    "subscriptions": "订阅管理",
+    "profile": "个人设置",
+    "admin": "管理后台"
   },
   "home": {
     "hero": {
@@ -251,5 +253,173 @@
     "salaryDistribution": "薪资分布",
     "sourceDistribution": "来源分布",
     "last30Days": "最近30天"
+  },
+  "subscriptions": {
+    "title": "职位订阅",
+    "subtitle": "当符合您条件的职位发布时获得通知",
+    "create": "创建订阅",
+    "edit": "编辑订阅",
+    "delete": "删除订阅",
+    "confirmDelete": "确定要删除此订阅吗？",
+    "active": "启用",
+    "inactive": "停用",
+    "noSubscriptions": "您还没有任何订阅。",
+    "form": {
+      "name": "订阅名称",
+      "namePlaceholder": "例如：前端开发职位",
+      "nameRequired": "名称为必填项",
+      "frequency": "通知频率",
+      "frequencyOptions": {
+        "immediate": "即时通知",
+        "daily": "每日汇总",
+        "weekly": "每周汇总"
+      },
+      "filters": "筛选条件",
+      "keywords": "关键词",
+      "keywordsPlaceholder": "例如：React、TypeScript",
+      "jobTypes": "职位类型",
+      "remoteTypes": "远程类型",
+      "sources": "职位来源",
+      "salaryMin": "最低薪资",
+      "salaryMinPlaceholder": "例如：80000",
+      "category": "职位分类",
+      "experienceLevel": "经验要求",
+      "tags": "必备技能",
+      "submit": "保存订阅",
+      "cancel": "取消"
+    },
+    "stats": {
+      "matchingJobs": "匹配职位",
+      "notificationsSent": "已发送通知",
+      "lastNotified": "最近通知"
+    },
+    "messages": {
+      "createSuccess": "订阅创建成功！",
+      "updateSuccess": "订阅更新成功！",
+      "deleteSuccess": "订阅删除成功！",
+      "error": "操作失败，请重试。"
+    }
+  },
+  "admin": {
+    "title": "管理后台",
+    "nav": {
+      "jobs": "职位管理",
+      "users": "用户管理",
+      "auditLogs": "审计日志",
+      "settings": "系统设置"
+    },
+    "jobs": {
+      "title": "职位管理",
+      "subtitle": "审核和管理用户发布的职位",
+      "status": {
+        "all": "全部状态",
+        "draft": "草稿",
+        "published": "已发布",
+        "closed": "已关闭"
+      },
+      "source": {
+        "all": "全部来源",
+        "userPosted": "用户发布"
+      },
+      "searchPlaceholder": "搜索职位或公司...",
+      "actions": {
+        "approve": "批准",
+        "reject": "拒绝",
+        "delete": "删除",
+        "view": "查看详情"
+      },
+      "confirmApprove": "确定批准这个职位吗？",
+      "confirmReject": "确定拒绝这个职位吗？",
+      "confirmDelete": "确定要删除这个职位吗？",
+      "rejectReason": "拒绝原因",
+      "rejectReasonPlaceholder": "请提供拒绝原因...",
+      "rejectReasonRequired": "拒绝原因为必填项",
+      "messages": {
+        "approveSuccess": "职位已批准！",
+        "rejectSuccess": "职位已拒绝！",
+        "deleteSuccess": "职位已删除！",
+        "error": "操作失败，请重试。"
+      },
+      "table": {
+        "title": "职位标题",
+        "company": "公司",
+        "source": "来源",
+        "status": "状态",
+        "publishedAt": "发布时间",
+        "actions": "操作"
+      }
+    },
+    "users": {
+      "title": "用户管理",
+      "subtitle": "管理用户账户和权限",
+      "role": {
+        "all": "全部角色",
+        "user": "普通用户",
+        "admin": "管理员"
+      },
+      "status": {
+        "all": "全部状态",
+        "active": "正常",
+        "banned": "已封禁"
+      },
+      "searchPlaceholder": "搜索用户名或邮箱...",
+      "actions": {
+        "ban": "封禁用户",
+        "unban": "解封用户",
+        "changeRole": "修改角色",
+        "viewDetails": "查看详情"
+      },
+      "confirmBan": "确定要封禁这个用户吗？",
+      "confirmUnban": "确定要解封这个用户吗？",
+      "banReason": "封禁原因",
+      "banReasonPlaceholder": "请提供封禁原因...",
+      "banReasonRequired": "封禁原因为必填项",
+      "changeRoleTo": "修改角色为：",
+      "messages": {
+        "banSuccess": "用户已封禁！",
+        "unbanSuccess": "用户已解封！",
+        "roleChangeSuccess": "用户角色已更新！",
+        "error": "操作失败，请重试。",
+        "cannotBanSelf": "您不能封禁自己。",
+        "cannotChangeOwnRole": "您不能修改自己的角色。"
+      },
+      "table": {
+        "name": "用户名",
+        "email": "邮箱",
+        "role": "角色",
+        "status": "状态",
+        "joinedAt": "加入时间",
+        "actions": "操作"
+      }
+    },
+    "auditLogs": {
+      "title": "审计日志",
+      "subtitle": "查看系统活动和管理员操作",
+      "action": {
+        "all": "全部操作",
+        "jobApprove": "批准职位",
+        "jobReject": "拒绝职位",
+        "jobDelete": "删除职位",
+        "userBan": "封禁用户",
+        "userUnban": "解封用户",
+        "userRoleChange": "修改用户角色",
+        "crawlerConfigUpdate": "更新爬虫配置",
+        "systemConfigUpdate": "更新系统配置"
+      },
+      "targetType": {
+        "all": "全部类型",
+        "job": "职位",
+        "user": "用户",
+        "config": "配置"
+      },
+      "table": {
+        "action": "操作",
+        "admin": "管理员",
+        "target": "目标",
+        "details": "详情",
+        "timestamp": "时间"
+      },
+      "viewDetails": "查看详情"
+    }
   }
 }
