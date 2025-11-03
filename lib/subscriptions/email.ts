@@ -149,3 +149,6 @@ export async function sendJobNotificationEmail(
     };
   }
 }
+
+// Alias for backward compatibility
+export const sendJobNotifications = sendJobNotificationEmail;

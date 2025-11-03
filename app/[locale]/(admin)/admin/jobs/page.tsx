@@ -108,7 +108,7 @@ export default function AdminJobsPage() {
     setIsSubmitting(true);
     try {
       const response = await fetch(`/api/admin/jobs/${selectedJobId}/approve`, {
-        method: "POST",
+        method: "PUT",
       });
 
       const data = await response.json();
@@ -138,7 +138,7 @@ export default function AdminJobsPage() {
     setIsSubmitting(true);
     try {
       const response = await fetch(`/api/admin/jobs/${selectedJobId}/reject`, {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: rejectReason }),
       });

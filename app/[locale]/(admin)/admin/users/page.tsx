@@ -110,7 +110,7 @@ export default function AdminUsersPage() {
     setIsSubmitting(true);
     try {
       const response = await fetch(`/api/admin/users/${selectedUserId}/ban`, {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reason: banReason }),
       });
@@ -140,7 +140,7 @@ export default function AdminUsersPage() {
     setIsSubmitting(true);
     try {
       const response = await fetch(`/api/admin/users/${selectedUserId}/unban`, {
-        method: "POST",
+        method: "PUT",
       });
 
       const data = await response.json();
