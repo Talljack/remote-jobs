@@ -21,6 +21,7 @@ interface JobDetailContentProps {
 
 export function JobDetailContent({ job }: JobDetailContentProps) {
   const t = useTranslations("jobDetail");
+  const tJobs = useTranslations("jobs");
 
   const handleShare = () => {
     if (navigator.share) {
@@ -65,7 +66,7 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
                   <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Briefcase className="h-4 w-4" />
-                      <span>{useTranslations("jobs")(`remoteTypes.${job.remoteType}`)}</span>
+                      <span>{tJobs(`remoteTypes.${job.remoteType}`)}</span>
                     </div>
                     {job.location && (
                       <div className="flex items-center gap-1">
@@ -101,14 +102,14 @@ export function JobDetailContent({ job }: JobDetailContentProps) {
           <CardContent>
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex gap-2">
-                <Badge>{useTranslations("jobs")(`jobTypes.${job.type}`)}</Badge>
-                <Badge variant="outline">{useTranslations("jobs")(`sources.${job.source}`)}</Badge>
+                <Badge>{tJobs(`jobTypes.${job.type}`)}</Badge>
+                <Badge variant="outline">{tJobs(`sources.${job.source}`)}</Badge>
               </div>
               <div className="text-lg font-semibold text-primary">
                 {formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency || "USD")}
               </div>
               <Button size="lg" className="ml-auto" onClick={handleApply}>
-                {t("../jobs.card.apply")}
+                {t("applyNow")}
                 <ExternalLink className="ml-2 h-4 w-4" />
               </Button>
             </div>
