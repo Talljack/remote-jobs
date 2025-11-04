@@ -68,6 +68,25 @@ export const skillCategoryEnum = pgEnum("skill_category", [
   "SOFT_SKILL",
 ]);
 
+export const subscriptionFrequencyEnum = pgEnum("subscription_frequency", [
+  "DAILY",
+  "WEEKLY",
+  "IMMEDIATE", // Instant notification when matching job is found
+]);
+
+export const notificationStatusEnum = pgEnum("notification_status", ["PENDING", "SENT", "FAILED"]);
+
+export const auditActionEnum = pgEnum("audit_action", [
+  "JOB_APPROVE",
+  "JOB_REJECT",
+  "JOB_DELETE",
+  "USER_BAN",
+  "USER_UNBAN",
+  "USER_ROLE_CHANGE",
+  "CRAWLER_CONFIG_UPDATE",
+  "SYSTEM_CONFIG_UPDATE",
+]);
+
 // Users table
 export const users = pgTable("users", {
   id: text("id").primaryKey(), // Clerk user ID
@@ -76,6 +95,9 @@ export const users = pgTable("users", {
   avatar: text("avatar"),
   role: userRoleEnum("role").default("USER").notNull(),
   emailNotification: boolean("email_notification").default(true).notNull(),
+  isBanned: boolean("is_banned").default(false).notNull(),
+  bannedAt: timestamp("banned_at"),
+  bannedReason: text("banned_reason"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -221,10 +243,113 @@ export const crawlLogs = pgTable("crawl_logs", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Job subscriptions table
+export const jobSubscriptions = pgTable(
+  "job_subscriptions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(), // Subscription name (e.g., "Frontend Jobs")
+    isActive: boolean("is_active").default(true).notNull(),
+    frequency: subscriptionFrequencyEnum("frequency").default("DAILY").notNull(),
+    // Filter criteria
+    keywords: text("keywords").array(), // Search keywords
+    jobTypes: text("job_types").array(), // Job types to match
+    remoteTypes: text("remote_types").array(), // Remote types to match
+    sources: text("sources").array(), // Sources to monitor
+    salaryMin: integer("salary_min"),
+    categoryId: uuid("category_id").references(() => jobCategories.id),
+    experienceLevel: text("experience_level"),
+    // Notification settings
+    lastNotifiedAt: timestamp("last_notified_at"),
+    notificationCount: integer("notification_count").default(0).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdx: index("subscriptions_user_idx").on(table.userId),
+    activeIdx: index("subscriptions_active_idx").on(table.isActive),
+  })
+);
+
+// Subscription tags (many-to-many)
+export const subscriptionTagRelations = pgTable(
+  "subscription_tag_relations",
+  {
+    subscriptionId: uuid("subscription_id")
+      .notNull()
+      .references(() => jobSubscriptions.id, { onDelete: "cascade" }),
+    tagId: uuid("tag_id")
+      .notNull()
+      .references(() => jobTags.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.subscriptionId, table.tagId] }),
+  })
+);
+
+// Notification queue table
+export const notificationQueue = pgTable(
+  "notification_queue",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    subscriptionId: uuid("subscription_id")
+      .notNull()
+      .references(() => jobSubscriptions.id, { onDelete: "cascade" }),
+    jobId: uuid("job_id")
+      .notNull()
+      .references(() => jobs.id, { onDelete: "cascade" }),
+    status: notificationStatusEnum("status").default("PENDING").notNull(),
+    scheduledFor: timestamp("scheduled_for").notNull(), // When to send
+    sentAt: timestamp("sent_at"),
+    errorMessage: text("error_message"),
+    retryCount: integer("retry_count").default(0).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    statusIdx: index("notifications_status_idx").on(table.status),
+    scheduledIdx: index("notifications_scheduled_idx").on(table.scheduledFor),
+    userIdx: index("notifications_user_idx").on(table.userId),
+  })
+);
+
+// Audit logs table (for admin actions)
+export const auditLogs = pgTable(
+  "audit_logs",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    adminId: text("admin_id")
+      .notNull()
+      .references(() => users.id),
+    action: auditActionEnum("action").notNull(),
+    targetType: text("target_type").notNull(), // "job", "user", "config"
+    targetId: text("target_id"), // ID of the affected resource
+    details: text("details"), // JSON string with additional details
+    metadata: text("metadata"), // JSON string with before/after state
+    ipAddress: text("ip_address"),
+    userAgent: text("user_agent"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    adminIdx: index("audit_logs_admin_idx").on(table.adminId),
+    actionIdx: index("audit_logs_action_idx").on(table.action),
+    targetIdx: index("audit_logs_target_idx").on(table.targetType, table.targetId),
+    createdAtIdx: index("audit_logs_created_at_idx").on(table.createdAt),
+  })
+);
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   jobs: many(jobs),
   bookmarks: many(bookmarks),
+  subscriptions: many(jobSubscriptions),
+  notifications: many(notificationQueue),
+  auditLogs: many(auditLogs),
 }));
 
 export const jobCategoriesRelations = relations(jobCategories, ({ one, many }) => ({
@@ -291,6 +416,52 @@ export const bookmarksRelations = relations(bookmarks, ({ one }) => ({
   }),
 }));
 
+export const jobSubscriptionsRelations = relations(jobSubscriptions, ({ one, many }) => ({
+  user: one(users, {
+    fields: [jobSubscriptions.userId],
+    references: [users.id],
+  }),
+  category: one(jobCategories, {
+    fields: [jobSubscriptions.categoryId],
+    references: [jobCategories.id],
+  }),
+  tags: many(subscriptionTagRelations),
+  notifications: many(notificationQueue),
+}));
+
+export const subscriptionTagRelationsRelations = relations(subscriptionTagRelations, ({ one }) => ({
+  subscription: one(jobSubscriptions, {
+    fields: [subscriptionTagRelations.subscriptionId],
+    references: [jobSubscriptions.id],
+  }),
+  tag: one(jobTags, {
+    fields: [subscriptionTagRelations.tagId],
+    references: [jobTags.id],
+  }),
+}));
+
+export const notificationQueueRelations = relations(notificationQueue, ({ one }) => ({
+  user: one(users, {
+    fields: [notificationQueue.userId],
+    references: [users.id],
+  }),
+  subscription: one(jobSubscriptions, {
+    fields: [notificationQueue.subscriptionId],
+    references: [jobSubscriptions.id],
+  }),
+  job: one(jobs, {
+    fields: [notificationQueue.jobId],
+    references: [jobs.id],
+  }),
+}));
+
+export const auditLogsRelations = relations(auditLogs, ({ one }) => ({
+  admin: one(users, {
+    fields: [auditLogs.adminId],
+    references: [users.id],
+  }),
+}));
+
 // Type exports
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -306,6 +477,18 @@ export type Bookmark = typeof bookmarks.$inferSelect;
 export type NewBookmark = typeof bookmarks.$inferInsert;
 export type CrawlLog = typeof crawlLogs.$inferSelect;
 export type NewCrawlLog = typeof crawlLogs.$inferInsert;
+export type JobSubscription = typeof jobSubscriptions.$inferSelect;
+export type NewJobSubscription = typeof jobSubscriptions.$inferInsert;
+export type NotificationQueue = typeof notificationQueue.$inferSelect;
+export type NewNotificationQueue = typeof notificationQueue.$inferInsert;
+export type AuditLog = typeof auditLogs.$inferSelect;
+export type NewAuditLog = typeof auditLogs.$inferInsert;
 
 // Enum value types
 export type SkillCategory = (typeof skillCategoryEnum.enumValues)[number];
+export type SubscriptionFrequency = (typeof subscriptionFrequencyEnum.enumValues)[number];
+export type NotificationStatus = (typeof notificationStatusEnum.enumValues)[number];
+export type AuditAction = (typeof auditActionEnum.enumValues)[number];
+export type JobStatus = (typeof jobStatusEnum.enumValues)[number];
+export type JobSource = (typeof jobSourceEnum.enumValues)[number];
+export type UserRole = (typeof userRoleEnum.enumValues)[number];

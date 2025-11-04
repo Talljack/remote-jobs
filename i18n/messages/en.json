@@ -29,7 +29,9 @@
     "console": "Dashboard",
     "myJobs": "My Jobs",
     "bookmarks": "Bookmarks",
-    "profile": "Profile"
+    "subscriptions": "Subscriptions",
+    "profile": "Profile",
+    "admin": "Admin"
   },
   "home": {
     "hero": {
@@ -251,5 +253,173 @@
     "salaryDistribution": "Salary Distribution",
     "sourceDistribution": "Source Distribution",
     "last30Days": "Last 30 Days"
+  },
+  "subscriptions": {
+    "title": "Job Subscriptions",
+    "subtitle": "Get notified when jobs matching your criteria are posted",
+    "create": "Create Subscription",
+    "edit": "Edit Subscription",
+    "delete": "Delete Subscription",
+    "confirmDelete": "Are you sure you want to delete this subscription?",
+    "active": "Active",
+    "inactive": "Inactive",
+    "noSubscriptions": "You don't have any subscriptions yet.",
+    "form": {
+      "name": "Subscription Name",
+      "namePlaceholder": "e.g., Frontend Jobs",
+      "nameRequired": "Name is required",
+      "frequency": "Notification Frequency",
+      "frequencyOptions": {
+        "immediate": "Immediate",
+        "daily": "Daily Digest",
+        "weekly": "Weekly Digest"
+      },
+      "filters": "Filter Criteria",
+      "keywords": "Keywords",
+      "keywordsPlaceholder": "e.g., React, TypeScript",
+      "jobTypes": "Job Types",
+      "remoteTypes": "Remote Types",
+      "sources": "Job Sources",
+      "salaryMin": "Minimum Salary",
+      "salaryMinPlaceholder": "e.g., 80000",
+      "category": "Category",
+      "experienceLevel": "Experience Level",
+      "tags": "Required Skills",
+      "submit": "Save Subscription",
+      "cancel": "Cancel"
+    },
+    "stats": {
+      "matchingJobs": "Matching Jobs",
+      "notificationsSent": "Notifications Sent",
+      "lastNotified": "Last Notified"
+    },
+    "messages": {
+      "createSuccess": "Subscription created successfully!",
+      "updateSuccess": "Subscription updated successfully!",
+      "deleteSuccess": "Subscription deleted successfully!",
+      "error": "An error occurred. Please try again."
+    }
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "nav": {
+      "jobs": "Job Management",
+      "users": "User Management",
+      "auditLogs": "Audit Logs",
+      "settings": "Settings"
+    },
+    "jobs": {
+      "title": "Job Management",
+      "subtitle": "Review and manage user-posted jobs",
+      "status": {
+        "all": "All Status",
+        "draft": "Draft",
+        "published": "Published",
+        "closed": "Closed"
+      },
+      "source": {
+        "all": "All Sources",
+        "userPosted": "User Posted"
+      },
+      "searchPlaceholder": "Search by title or company...",
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject",
+        "delete": "Delete",
+        "view": "View Details"
+      },
+      "confirmApprove": "Approve this job?",
+      "confirmReject": "Reject this job?",
+      "confirmDelete": "Are you sure you want to delete this job?",
+      "rejectReason": "Rejection Reason",
+      "rejectReasonPlaceholder": "Please provide a reason for rejection...",
+      "rejectReasonRequired": "Rejection reason is required",
+      "messages": {
+        "approveSuccess": "Job approved successfully!",
+        "rejectSuccess": "Job rejected successfully!",
+        "deleteSuccess": "Job deleted successfully!",
+        "error": "An error occurred. Please try again."
+      },
+      "table": {
+        "title": "Job Title",
+        "company": "Company",
+        "source": "Source",
+        "status": "Status",
+        "publishedAt": "Published",
+        "actions": "Actions"
+      }
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "Manage user accounts and permissions",
+      "role": {
+        "all": "All Roles",
+        "user": "User",
+        "admin": "Admin"
+      },
+      "status": {
+        "all": "All Status",
+        "active": "Active",
+        "banned": "Banned"
+      },
+      "searchPlaceholder": "Search by name or email...",
+      "actions": {
+        "ban": "Ban User",
+        "unban": "Unban User",
+        "changeRole": "Change Role",
+        "viewDetails": "View Details"
+      },
+      "confirmBan": "Are you sure you want to ban this user?",
+      "confirmUnban": "Are you sure you want to unban this user?",
+      "banReason": "Ban Reason",
+      "banReasonPlaceholder": "Please provide a reason for banning this user...",
+      "banReasonRequired": "Ban reason is required",
+      "changeRoleTo": "Change role to:",
+      "messages": {
+        "banSuccess": "User banned successfully!",
+        "unbanSuccess": "User unbanned successfully!",
+        "roleChangeSuccess": "User role updated successfully!",
+        "error": "An error occurred. Please try again.",
+        "cannotBanSelf": "You cannot ban yourself.",
+        "cannotChangeOwnRole": "You cannot change your own role."
+      },
+      "table": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "joinedAt": "Joined",
+        "actions": "Actions"
+      }
+    },
+    "auditLogs": {
+      "title": "Audit Logs",
+      "subtitle": "View system activity and admin actions",
+      "action": {
+        "all": "All Actions",
+        "jobApprove": "Job Approved",
+        "jobReject": "Job Rejected",
+        "jobDelete": "Job Deleted",
+        "userBan": "User Banned",
+        "userUnban": "User Unbanned",
+        "userRoleChange": "User Role Changed",
+        "crawlerConfigUpdate": "Crawler Config Updated",
+        "systemConfigUpdate": "System Config Updated"
+      },
+      "targetType": {
+        "all": "All Types",
+        "job": "Job",
+        "user": "User",
+        "config": "Configuration"
+      },
+      "table": {
+        "action": "Action",
+        "admin": "Admin",
+        "target": "Target",
+        "details": "Details",
+        "timestamp": "Timestamp"
+      },
+      "viewDetails": "View Details"
+    }
   }
 }
