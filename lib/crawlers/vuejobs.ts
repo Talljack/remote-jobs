@@ -108,16 +108,43 @@ function mapExperienceLevel(
 
 /**
  * Format location from VueJobs data
+ * Safely extracts string values from location objects
  */
-function formatLocation(locations?: VueJobsLocation[]): string {
-  if (!locations || locations.length === 0) return "Remote";
+function formatLocation(locations?: VueJobsLocation[] | unknown): string {
+  if (!locations || (Array.isArray(locations) && locations.length === 0)) {
+    return "Remote";
+  }
 
-  const location = locations[0];
-  const parts = [];
+  // Handle case where locations is not an array
+  const locationArray = Array.isArray(locations) ? locations : [locations];
+  const location = locationArray[0];
 
-  if (location.city) parts.push(location.city);
-  if (location.state) parts.push(location.state);
-  if (location.country_code) parts.push(location.country_code);
+  if (!location || typeof location !== "object") {
+    return "Remote";
+  }
+
+  const parts: string[] = [];
+
+  // Safely extract string values, handling nested objects
+  const getValue = (val: unknown): string | null => {
+    if (!val) return null;
+    if (typeof val === "string") return val;
+    if (typeof val === "object" && val !== null && "name" in val && typeof val.name === "string") {
+      return val.name;
+    }
+    if (typeof val === "object" && val !== null && "code" in val && typeof val.code === "string") {
+      return val.code;
+    }
+    return null;
+  };
+
+  const city = getValue(location.city);
+  const state = getValue(location.state);
+  const countryCode = getValue(location.country_code);
+
+  if (city) parts.push(city);
+  if (state) parts.push(state);
+  if (countryCode) parts.push(countryCode);
 
   return parts.length > 0 ? parts.join(", ") : "Remote";
 }
