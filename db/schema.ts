@@ -30,6 +30,7 @@ export const jobSourceEnum = pgEnum("job_source", [
   "WORKING_NOMADS", // International remote jobs API
   "FOURDAYWEEK", // 4-day week jobs
   "REMOTEBASE", // Tech jobs platform
+  "GREENHOUSE", // Aggregates from multiple companies using Greenhouse ATS
   // User posted
   "USER_POSTED",
   // Deprecated/inactive sources (keep for existing data)
