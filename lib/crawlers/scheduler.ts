@@ -6,6 +6,7 @@ import { matchJobsToSubscriptions } from "@/lib/subscriptions/matcher";
 import { cleanupOldData } from "./cleaner";
 import { crawlEleduck } from "./eleduck";
 import { crawlFourDayWeek } from "./fourdayweek";
+import { crawlGreenhouse } from "./greenhouse";
 import { crawlHimalayas } from "./himalayas";
 import { crawlJobicy } from "./jobicy";
 import { crawlRemoteBase } from "./remotebase";
@@ -38,6 +39,7 @@ export async function runCrawlers() {
     workingnomads: { success: false, message: "", data: null as CrawlResult | null },
     fourdayweek: { success: false, message: "", data: null as CrawlResult | null },
     remotebase: { success: false, message: "", data: null as CrawlResult | null },
+    greenhouse: { success: false, message: "", data: null as CrawlResult | null },
   };
 
   // Crawl V2EX
@@ -426,6 +428,45 @@ export async function runCrawlers() {
     results.remotebase = {
       success: false,
       message: `RemoteBase crawler failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      data: null,
+    };
+  }
+
+  // Crawl Greenhouse
+  try {
+    const startTime = Date.now();
+    const greenhouseResult = await crawlGreenhouse();
+    const duration = Date.now() - startTime;
+
+    await db.insert(crawlLogs).values({
+      source: "GREENHOUSE",
+      status: greenhouseResult.failed === 0 ? "SUCCESS" : "PARTIAL",
+      totalCount: greenhouseResult.total,
+      successCount: greenhouseResult.success,
+      failCount: greenhouseResult.failed,
+      duration,
+    });
+
+    results.greenhouse = {
+      success: true,
+      message: `Greenhouse: ${greenhouseResult.success} jobs crawled successfully`,
+      data: greenhouseResult,
+    };
+  } catch (error) {
+    console.error("Greenhouse crawler failed:", error);
+
+    await db.insert(crawlLogs).values({
+      source: "GREENHOUSE",
+      status: "FAILED",
+      totalCount: 0,
+      successCount: 0,
+      failCount: 0,
+      errorMessage: error instanceof Error ? error.message : "Unknown error",
+    });
+
+    results.greenhouse = {
+      success: false,
+      message: `Greenhouse crawler failed: ${error instanceof Error ? error.message : "Unknown error"}`,
       data: null,
     };
   }
