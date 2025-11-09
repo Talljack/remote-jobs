@@ -78,17 +78,76 @@ curl http://localhost:3000/api/crawl/himalayas    # Test individual crawler
 
 1. Create `lib/crawlers/newsource.ts` with function returning `{success, failed, total}`
 2. Add source to `jobSourceEnum` in `db/schema.ts`
-3. Update `db:push` to sync enum changes
-4. Import and call in `lib/crawlers/scheduler.ts`
-5. Create API route: `app/api/crawl/newsource/route.ts`
-6. Add translations to `i18n/messages/{en,zh}.json` under `jobs.sources`
+3. **Create migration file** `db/add-{source}-source.sql` (see Database Migrations section)
+4. Run migration locally: `psql $DATABASE_URL -f db/add-{source}-source.sql`
+5. Import and call in `lib/crawlers/scheduler.ts`
+6. Create API route: `app/api/crawl/newsource/route.ts`
+7. Add translations to `i18n/messages/{en,zh}.json` under `jobs.sources`
+8. Test crawler: `curl http://localhost:3000/api/crawl/newsource`
+9. Verify build passes: `pnpm build`
+10. **Document migration in PR** - Remind reviewers to run migration before deployment
 
 **Database Migrations**
 
 - Always run `pnpm db:generate` after schema changes to create migration files
 - Use `pnpm db:push` for quick dev iteration (pushes directly without migration)
 - Use `pnpm db:migrate` in production with generated migration files
-- **Important**: When adding enum values, PostgreSQL requires `db:push` or raw SQL migration
+- **Important**: When adding enum values, PostgreSQL requires special handling
+
+**Adding New Enum Values (Critical for Production)**
+
+When adding new values to PostgreSQL enums (e.g., `jobSourceEnum`, `jobTypeEnum`):
+
+1. **Update Schema** (`db/schema.ts`):
+
+   ```typescript
+   export const jobSourceEnum = pgEnum("job_source", [
+     "EXISTING_VALUE",
+     "NEW_VALUE", // Add new value
+   ]);
+   ```
+
+2. **Local Development**:
+
+   ```bash
+   # Option 1: Direct push (development only)
+   pnpm db:push
+
+   # Option 2: SQL command
+   psql $DATABASE_URL -c "ALTER TYPE job_source ADD VALUE IF NOT EXISTS 'NEW_VALUE';"
+   ```
+
+3. **Create Migration File** for production databases:
+   - Create `db/add-{feature}-source.sql` with Supabase-compatible syntax:
+
+   ```sql
+   -- Migration: Add NEW_VALUE to job_source enum
+   -- For Supabase: Run this in the SQL Editor
+   -- For other PostgreSQL: psql $DATABASE_URL -f db/add-{feature}-source.sql
+
+   -- Add NEW_VALUE to job_source enum (PostgreSQL 12+)
+   ALTER TYPE job_source ADD VALUE IF NOT EXISTS 'NEW_VALUE';
+   ```
+
+4. **Deploy Migration**:
+   - **Supabase**: Open SQL Editor → Paste migration content → Run
+   - **Vercel Postgres**: Dashboard → Storage → Query → Paste and execute
+   - **CLI**: `psql $DATABASE_URL -f db/add-{feature}-source.sql`
+
+5. **Verify Migration**:
+   ```sql
+   SELECT enumlabel FROM pg_enum
+   WHERE enumtypid = (SELECT oid FROM pg_type WHERE typname = 'job_source')
+   ORDER BY enumsortorder;
+   ```
+
+**Important Notes**:
+
+- ⚠️ **NEVER use `DO $$ ... END $$;` blocks in Supabase** - Use simple `ALTER TYPE` statements
+- ✅ Always use `IF NOT EXISTS` to make migrations idempotent (safe to run multiple times)
+- ✅ Test migration locally before running in production
+- ✅ Commit migration file to repository (e.g., `db/add-greenhouse-source.sql`)
+- ✅ PostgreSQL enum values cannot be removed or reordered after creation
 
 **Fixing Crawler Issues**
 
