@@ -1,6 +1,6 @@
 import type { ReadonlyURLSearchParams } from "next/navigation";
 
-import { eq, inArray, like, or, gte, lte, SQL } from "drizzle-orm";
+import { eq, inArray, ilike, or, gte, lte, SQL } from "drizzle-orm";
 
 import { jobs } from "@/db";
 
@@ -118,9 +118,9 @@ export const buildJobConditions = (
 
   if (filters.keyword) {
     const keywordCondition = or(
-      like(jobs.title, `%${filters.keyword}%`),
-      like(jobs.companyName, `%${filters.keyword}%`),
-      like(jobs.description, `%${filters.keyword}%`)
+      ilike(jobs.title, `%${filters.keyword}%`),
+      ilike(jobs.companyName, `%${filters.keyword}%`),
+      ilike(jobs.description, `%${filters.keyword}%`)
     );
     if (keywordCondition) {
       conditions.push(keywordCondition);

@@ -233,7 +233,7 @@ export function JobFilters() {
       <CardHeader className="flex-shrink-0 flex-row items-center justify-between">
         <CardTitle>{t("title")}</CardTitle>
         <Button variant="ghost" size="sm" onClick={clearFilters}>
-          Clear
+          {t("clear")}
         </Button>
       </CardHeader>
       <CardContent className="flex-1 space-y-6 overflow-y-auto pb-4">

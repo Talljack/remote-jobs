@@ -133,7 +133,8 @@
       "month": "本月",
       "all": "全部",
       "expandAll": "全部展开",
-      "collapseAll": "全部折叠"
+      "collapseAll": "全部折叠",
+      "clear": "清除"
     },
     "jobTypes": {
       "FULL_TIME": "全职",
@@ -182,6 +183,17 @@
       "bookmarkAdded": "职位已收藏！",
       "bookmarkError": "收藏失败",
       "somethingWentWrong": "出错了"
+    },
+    "search": {
+      "placeholder": "搜索职位名称、公司或关键词...",
+      "clear": "清除搜索"
+    },
+    "list": {
+      "title": "找到 {count} 个远程职位",
+      "noResults": "未找到职位",
+      "noResultsHint": "请尝试调整筛选条件或搜索关键词",
+      "loadMore": "加载更多",
+      "loading": "加载中..."
     }
   },
   "jobDetail": {
