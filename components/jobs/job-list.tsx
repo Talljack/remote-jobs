@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Search, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 import { JobCard } from "./job-card";
 
@@ -18,6 +20,7 @@ interface Job {
   type: string;
   remoteType: string;
   location: string | null;
+  description: string;
   salaryMin: number | null;
   salaryMax: number | null;
   salaryCurrency: string;
@@ -28,6 +31,8 @@ interface Job {
 
 export function JobList() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const t = useTranslations("jobs");
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
@@ -36,6 +41,46 @@ export function JobList() {
     total: 0,
   });
 
+  // Search state
+  const currentKeyword = searchParams.get("q") || searchParams.get("keyword") || "";
+  const [searchInput, setSearchInput] = useState(currentKeyword);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Sync search input when URL params change externally
+  useEffect(() => {
+    setSearchInput(currentKeyword);
+  }, [currentKeyword]);
+
+  const updateSearchParam = useCallback(
+    (value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (value.trim()) {
+        params.set("q", value.trim());
+      } else {
+        params.delete("q");
+        params.delete("keyword");
+      }
+      params.delete("page");
+      router.push(`?${params.toString()}`);
+    },
+    [searchParams, router]
+  );
+
+  const handleSearchChange = (value: string) => {
+    setSearchInput(value);
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+    debounceTimer.current = setTimeout(() => {
+      updateSearchParam(value);
+    }, 400);
+  };
+
+  const clearSearch = () => {
+    setSearchInput("");
+    updateSearchParam("");
+  };
+
   const fetchJobs = async (page = 1) => {
     setLoading(true);
     try {
@@ -43,17 +88,8 @@ export function JobList() {
       params.set("page", page.toString());
 
       const url = `/api/jobs?${params.toString()}`;
-      console.log("🔍 Fetching jobs from:", url);
-
       const response = await fetch(url);
       const data = await response.json();
-
-      console.log("📦 API Response:", {
-        success: data.success,
-        jobsCount: data.data?.jobs?.length,
-        total: data.data?.pagination?.total,
-        pagination: data.data?.pagination,
-      });
 
       if (data.success) {
         if (page === 1) {
@@ -64,7 +100,7 @@ export function JobList() {
         setPagination(data.data.pagination);
       }
     } catch (error) {
-      console.error("❌ Error fetching jobs:", error);
+      console.error("Error fetching jobs:", error);
     } finally {
       setLoading(false);
     }
@@ -82,24 +118,76 @@ export function JobList() {
 
   if (loading && jobs.length === 0) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="space-y-6">
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={searchInput}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder={t("search.placeholder")}
+            className="pl-10 pr-10"
+          />
+        </div>
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
       </div>
     );
   }
 
   if (jobs.length === 0) {
     return (
-      <div className="py-20 text-center">
-        <p className="text-muted-foreground">No jobs found. Try adjusting your filters.</p>
+      <div className="space-y-6">
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={searchInput}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            placeholder={t("search.placeholder")}
+            className="pl-10 pr-10"
+          />
+          {searchInput && (
+            <button
+              onClick={clearSearch}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+        <div className="py-20 text-center">
+          <p className="text-lg font-medium text-muted-foreground">{t("list.noResults")}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{t("list.noResultsHint")}</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
+      {/* Search Bar */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          value={searchInput}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          placeholder={t("search.placeholder")}
+          className="pl-10 pr-10"
+        />
+        {searchInput && (
+          <button
+            onClick={clearSearch}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">{pagination.total} Remote Jobs Found</h1>
+        <h1 className="text-2xl font-bold">{t("list.title", { count: pagination.total })}</h1>
       </div>
 
       <div className="grid gap-4">
@@ -114,10 +202,10 @@ export function JobList() {
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Loading...
+                {t("list.loading")}
               </>
             ) : (
-              "Load More"
+              t("list.loadMore")
             )}
           </Button>
         </div>

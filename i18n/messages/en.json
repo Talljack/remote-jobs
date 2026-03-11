@@ -133,7 +133,8 @@
       "month": "This Month",
       "all": "All",
       "expandAll": "Expand All",
-      "collapseAll": "Collapse All"
+      "collapseAll": "Collapse All",
+      "clear": "Clear"
     },
     "jobTypes": {
       "FULL_TIME": "Full Time",
@@ -182,6 +183,17 @@
       "bookmarkAdded": "Job bookmarked!",
       "bookmarkError": "Failed to bookmark job",
       "somethingWentWrong": "Something went wrong"
+    },
+    "search": {
+      "placeholder": "Search job title, company, or keywords...",
+      "clear": "Clear search"
+    },
+    "list": {
+      "title": "{count} Remote Jobs Found",
+      "noResults": "No jobs found",
+      "noResultsHint": "Try adjusting your filters or search terms.",
+      "loadMore": "Load More",
+      "loading": "Loading..."
     }
   },
   "jobDetail": {

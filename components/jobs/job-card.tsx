@@ -20,6 +20,7 @@ interface JobCardProps {
     type: string;
     remoteType: string;
     location: string | null;
+    description?: string;
     salaryMin: number | null;
     salaryMax: number | null;
     salaryCurrency: string | null;
@@ -76,6 +77,13 @@ export function JobCard({ job }: JobCardProps) {
                   </div>
                 )}
               </div>
+
+              {/* Description */}
+              {job.description && (
+                <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+                  {job.description.replace(/<[^>]*>/g, "").slice(0, 200)}
+                </p>
+              )}
             </div>
           </div>
 
